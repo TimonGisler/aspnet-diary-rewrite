@@ -19,5 +19,6 @@ public static class RegisterUserHandler
         
         var result = await userManager.CreateAsync(user, registerUserCommand.Password);
         Console.WriteLine(result.Succeeded);
+        Console.WriteLine(result.Errors.ToString());
     }
 }

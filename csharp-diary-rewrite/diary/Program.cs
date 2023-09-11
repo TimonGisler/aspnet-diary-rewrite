@@ -19,6 +19,8 @@ public class Program
             .AddEntityFrameworkStores<DiaryDbContext>();
         builder.Services.Configure<IdentityOptions>(options =>
         {
+            options.User.RequireUniqueEmail = true;
+            
             options.Password.RequireDigit = false;
             options.Password.RequiredLength = 1;
             options.Password.RequireLowercase = false;
