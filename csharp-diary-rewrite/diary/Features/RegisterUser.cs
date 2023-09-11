@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace csharp_diary_rewrite.Features;
 
-public record RegisterUserCommand(string Email, string Password); //TODO TGIS, can I make use of this?
+public record RegisterUserCommand(string Email, string Password);
 
 public static class RegisterUserHandler
 {
