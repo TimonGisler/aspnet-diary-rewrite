@@ -52,12 +52,14 @@ public static class ApiRoutesExtensionFunctions
     //Extension method to map all the routes
     public static IEndpointRouteBuilder MapApiRoutes(this IEndpointRouteBuilder endpoints)
     {
-        //TODO TGIS, move into dependency injection
+        //TODO TGIS, move into dependency injection -> meh prolly not even encessary static class prolly good enough ngl
         AddEntry addEntryHandler = new AddEntry();
 
         endpoints.MapGet("/hello", () => { Console.WriteLine("CALLED"); return "HELLO"; });
         endpoints.MapGet("/saveEntry", addEntryHandler.SaveEntry);
         endpoints.MapPost("/register", RegisterUserHandler.RegisterUser);
+        endpoints.MapPost("/login", RegisterUserHandler.RegisterUser);
+
 
 
         return endpoints;
