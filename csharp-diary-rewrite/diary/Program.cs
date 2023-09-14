@@ -56,7 +56,7 @@ public static class ApiRoutesExtensionFunctions
         AddEntry addEntryHandler = new AddEntry();
 
         endpoints.MapGet("/hello", () => { Console.WriteLine("CALLED"); return "HELLO"; });
-        endpoints.MapGet("/save", addEntryHandler.SaveEntry);
+        endpoints.MapGet("/saveEntry", addEntryHandler.SaveEntry);
         endpoints.MapPost("/register", RegisterUserHandler.RegisterUser);
 
 
