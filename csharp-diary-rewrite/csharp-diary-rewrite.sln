@@ -5,7 +5,9 @@ VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "csharp-diary-rewrite", "diary\csharp-diary-rewrite.csproj", "{C02B1F56-1526-4713-B1A1-30F2F7681064}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightTests", "PlaywrightTests\PlaywrightTests.csproj", "{E5D7754F-F628-4622-931A-73392D7E0887}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightTests", "PlaywrightTests\PlaywrightTests.csproj", "{E5D7754F-F628-4622-931A-73392D7E0887}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharp-diary-rewriteTests", "csharp-diary-rewriteTests\csharp-diary-rewriteTests.csproj", "{78F1826B-FD62-4D8F-BCC3-679EADBCD10E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{E5D7754F-F628-4622-931A-73392D7E0887}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5D7754F-F628-4622-931A-73392D7E0887}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5D7754F-F628-4622-931A-73392D7E0887}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78F1826B-FD62-4D8F-BCC3-679EADBCD10E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78F1826B-FD62-4D8F-BCC3-679EADBCD10E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78F1826B-FD62-4D8F-BCC3-679EADBCD10E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78F1826B-FD62-4D8F-BCC3-679EADBCD10E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
