@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "csharp-diary-rewrite", "dia
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightTests", "PlaywrightTests\PlaywrightTests.csproj", "{E5D7754F-F628-4622-931A-73392D7E0887}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharp-diary-rewriteTests", "csharp-diary-rewriteTests\csharp-diary-rewriteTests.csproj", "{78F1826B-FD62-4D8F-BCC3-679EADBCD10E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharp-diary-rewriteTests-mstest", "csharp-diary-rewriteTests-mstest\csharp-diary-rewriteTests-mstest.csproj", "{78F1826B-FD62-4D8F-BCC3-679EADBCD10E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
