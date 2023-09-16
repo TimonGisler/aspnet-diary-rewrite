@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightTests", "Playwrig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharp-diary-rewriteTests-mstest", "csharp-diary-rewriteTests-mstest\csharp-diary-rewriteTests-mstest.csproj", "{78F1826B-FD62-4D8F-BCC3-679EADBCD10E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharp-diary-rewriteTests-xunit", "csharp-diary-rewriteTests-xunit\csharp-diary-rewriteTests-xunit.csproj", "{18EE13FD-25F1-47FD-8B44-36CFE7F62845}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{78F1826B-FD62-4D8F-BCC3-679EADBCD10E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78F1826B-FD62-4D8F-BCC3-679EADBCD10E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78F1826B-FD62-4D8F-BCC3-679EADBCD10E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18EE13FD-25F1-47FD-8B44-36CFE7F62845}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18EE13FD-25F1-47FD-8B44-36CFE7F62845}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18EE13FD-25F1-47FD-8B44-36CFE7F62845}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18EE13FD-25F1-47FD-8B44-36CFE7F62845}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
