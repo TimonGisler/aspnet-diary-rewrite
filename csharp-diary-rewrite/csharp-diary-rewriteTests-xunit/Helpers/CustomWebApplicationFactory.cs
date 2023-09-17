@@ -12,7 +12,13 @@ namespace csharp_diary_rewriteTests_xunit.Helpers;
 
 public class CustomWebApplicationFactory: WebApplicationFactory<Program>
 {
-    PostgreSqlContainer postgreSqlContainer;
+    private PostgreSqlContainer postgreSqlContainer;
+    /**
+     * My custom DbContext which uses the test container.
+     * Can be used to check if a update was successful.
+     * Or to create transactions and roll them back.
+     */
+    public DiaryDbContext diaryDbContext { get; private set;} 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureTestServices(services =>
@@ -43,7 +49,7 @@ public class CustomWebApplicationFactory: WebApplicationFactory<Program>
             });
             
             //migrate database
-            var diaryDbContext = services.BuildServiceProvider().GetService<DiaryDbContext>();
+            diaryDbContext = services.BuildServiceProvider().GetService<DiaryDbContext>();
             diaryDbContext!.Database.Migrate();
 
         });

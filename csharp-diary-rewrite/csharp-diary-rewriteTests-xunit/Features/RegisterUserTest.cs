@@ -23,9 +23,11 @@ public class RegisterUserTest : IClassFixture<CustomWebApplicationFactory>
         var mail = "test@test.com";
         var password = "test123";
         var registerUserCommand = new RegisterUserCommand(mail, password);
-        
+        var diaryDbContext = customWebApplicationFactory.diaryDbContext;
         var response = httpClient.PostAsJsonAsync("/api/register", registerUserCommand).Result;
         
         response.EnsureSuccessStatusCode(); //test if the status code is a success code (200-299)
+        var user = diaryDbContext.Users.FirstOrDefault(u => u.Email == mail);
+        Assert.NotNull(user); //todo tgis, make this test non modifying https://learn.microsoft.com/en-us/ef/core/testing/testing-with-the-database#tests-which-modify-data
     }
 }
