@@ -12,7 +12,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         
-        builder.Services.AddDbContext<DiaryDbContext>();
+        builder.Services.AddDbContext<DiaryDbContext>(options =>
+            options.UseNpgsql("Host=localhost:5433;Database=postgres;Username=postgres;Password=Hallo123_"));
         
         //aspnet identity
         builder.Services.AddIdentityCore<DiaryUser>()
@@ -55,7 +56,7 @@ public static class ApiRoutesExtensionFunctions
         //TODO TGIS, move into dependency injection -> meh prolly not even encessary static class prolly good enough ngl
         AddEntry addEntryHandler = new AddEntry();
 
-        endpoints.MapGet("/hello", () => { Console.WriteLine("CALLED"); return "HELLO"; });
+        endpoints.MapGet("/hello", Handler());
         endpoints.MapGet("/saveEntry", addEntryHandler.SaveEntry);
         endpoints.MapPost("/register", RegisterUserHandler.RegisterUser);
         endpoints.MapPost("/login", RegisterUserHandler.RegisterUser);
@@ -63,5 +64,11 @@ public static class ApiRoutesExtensionFunctions
 
 
         return endpoints;
+    }
+
+    private static Func<string> Handler()
+    {
+        Console.WriteLine("lol");
+        return () => { Console.WriteLine("CALLED"); return "HELLO"; };
     }
 }
