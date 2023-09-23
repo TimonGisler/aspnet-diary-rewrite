@@ -56,10 +56,10 @@ public static class ApiRoutesExtensionFunctions
         //TODO TGIS, move into dependency injection -> meh prolly not even encessary static class prolly good enough ngl
         AddEntry addEntryHandler = new AddEntry();
 
-        endpoints.MapGet("/hello", Handler());
+        endpoints.MapGet("/api", Handler());
         endpoints.MapGet("/saveEntry", addEntryHandler.SaveEntry);
         endpoints.MapPost("/register", RegisterUserHandler.RegisterUser);
-        endpoints.MapPost("/login", RegisterUserHandler.RegisterUser);
+        endpoints.MapPost("/login", LoginUserHandler.LoginUser);
 
 
 
