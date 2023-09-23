@@ -41,6 +41,15 @@ public class DiaryApplicationWrapper
         //TODO TGIS, it may be more performant if I make this async, but while testing there did not seem to be any differencebut this was probably because all those methods were only used once -\_(o.o)_/-
         return _httpClient.PostAsJsonAsync("/api/login", loginUserCommand).Result;
     }
+    
+    public string RetrieveJwtFromRegisteredUser()
+    {
+        var loginUserCommand = new LoginUserCommand(UserSavedInDatabase.Email, UserSavedInDatabase.Password);
+        var response = LoginUser(loginUserCommand);
+        string jwt =  response.Content.ReadAsStringAsync().Result;
+
+        return jwt;
+    }
 
     //get dbContext
     public DiaryDbContext GetDbContext()
