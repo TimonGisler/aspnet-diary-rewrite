@@ -18,15 +18,15 @@ public class DiaryApplicationWrapper
 
     //Data to seed in constructor
     private readonly UserData _userSavedInDatabase = new UserData("testUserMail@test.com", "testPw123");
+
     public DiaryApplicationWrapper()
     {
         var customWebApplicationFactory = new CustomWebApplicationFactory();
         _httpClient = customWebApplicationFactory.CreateClient();
         _diaryDbContext = customWebApplicationFactory.diaryDbContext;
-        
+
         //seed database with common test data
         RegisterUser(new RegisterUserCommand(_userSavedInDatabase.Email, _userSavedInDatabase.Password));
-        
     }
 
     public UserData UserSavedInDatabase => _userSavedInDatabase;
@@ -38,6 +38,7 @@ public class DiaryApplicationWrapper
 
     public HttpResponseMessage LoginUser(LoginUserCommand loginUserCommand)
     {
+        //TODO TGIS, it may be more performant if I make this async, but while testing there did not seem to be any differencebut this was probably because all those methods were only used once -\_(o.o)_/-
         return _httpClient.PostAsJsonAsync("/api/login", loginUserCommand).Result;
     }
 
@@ -46,5 +47,4 @@ public class DiaryApplicationWrapper
     {
         return _diaryDbContext;
     }
-
 }
