@@ -38,9 +38,14 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
     }
 
     [Fact]
-    public void user_with_wrong_pw_should_not_be_able_to_save_anything()
+    public void saved_entry_contains_creation_date()
     {
-        
+        Assert.Fail("Not Implemented");
+    }
+    
+    [Fact]
+    public void saved_entry_is_associated_with_current_user()
+    {
         Assert.Fail("Not Implemented");
     }
 }
