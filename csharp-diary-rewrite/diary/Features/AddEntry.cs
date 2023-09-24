@@ -9,7 +9,7 @@ namespace csharp_diary_rewrite.Features
     {
         public void SaveEntry(SaveEntryCommand saveEntryCommand, DiaryDbContext diaryDbContext)
         {
-            var entry = new Entry { Title = saveEntryCommand.Title, EntryText = saveEntryCommand.Text };
+            var entry = new Entry { Title = saveEntryCommand.Title, Text = saveEntryCommand.Text };
             
             diaryDbContext.Entries.Add(entry);
             diaryDbContext.SaveChanges();

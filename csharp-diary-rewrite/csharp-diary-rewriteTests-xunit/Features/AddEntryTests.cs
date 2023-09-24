@@ -40,6 +40,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
     [Fact]
     public void user_with_wrong_pw_should_not_be_able_to_save_anything()
     {
+        
         Assert.Fail("Not Implemented");
     }
 }
