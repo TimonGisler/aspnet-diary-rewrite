@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using csharp_diary_rewrite.Features;
 using csharp_diary_rewrite.Model;
 
@@ -55,5 +56,18 @@ public class DiaryApplicationWrapper
     public DiaryDbContext GetDbContext()
     {
         return _diaryDbContext;
+    }
+
+    // public HttpResponseMessage SaveEntry(SaveEntryCommand saveEntryCommand)
+    // {
+    //     return _httpClient.PostAsJsonAsync("/api/entry", saveEntryCommand).Result;
+    // }
+    
+    public HttpResponseMessage SaveEntry(SaveEntryCommand saveEntryCommand, string jwt = "")
+    {
+        var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/api/entry");
+        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+            
+        return _httpClient.SendAsync(requestMessage).Result;
     }
 }

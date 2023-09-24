@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 
 namespace csharp_diary_rewrite.Features
 {
+    public record SaveEntryCommand(string Title, string Text);
+    
     public class AddEntry
     {
-        private record SaveEntryCommand(string Title, string Text);
-        
         public long SaveEntry(HttpContext context, DiaryDbContext diaryDbContext)
         {
             Console.WriteLine(context.Request.Body.ToString());

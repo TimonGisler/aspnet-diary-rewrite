@@ -1,19 +1,36 @@
-﻿using Xunit;
+﻿using System.Net;
+using csharp_diary_rewrite.Features;
+using csharp_diary_rewriteTests_xunit.Helpers;
+using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class AddEntryTests
+public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
 {
+    
+    private readonly DiaryApplicationWrapper _diaryApplicationWrapper;
+    
+    public AddEntryTests(DiaryApplicationWrapper diaryApplicationWrapper)
+    {
+        _diaryApplicationWrapper = diaryApplicationWrapper;
+    }
+    
+    
     [Fact]
     public void not_logged_in_user_cannot_save_anything()
     {
-        Assert.Fail("Not Implemented");
+       var response = _diaryApplicationWrapper.SaveEntry(new SaveEntryCommand("test title", "test text"));
+        
+        Assert.True(response.StatusCode == HttpStatusCode.Unauthorized);
     }
 
     [Fact]
     public void logged_in_user_can_save_entry()
     {
-        Assert.Fail("Not Implemented");
+        var jwt = _diaryApplicationWrapper.RetrieveJwtFromRegisteredUser();
+        var response = _diaryApplicationWrapper.SaveEntry(new SaveEntryCommand("test title", "test text"), jwt);
+
+        response.EnsureSuccessStatusCode();
     }
 
     [Fact]

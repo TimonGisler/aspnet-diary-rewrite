@@ -5,6 +5,7 @@ using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using csharp_diary_rewrite.Model;
+using csharp_diary_rewrite.Settings;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -26,8 +27,6 @@ public static class LoginUserHandler
     private static string GenerateToken(string userId, string userEmail)
     {
         //TODO TGIS, how do I set this best?
-        var keyString = "incredible_secure_key_trust_me";
-        var issuer = "issuer is my server e.g. diaryApp.com";
         var audience = "audience is my server e.g. diaryApp.com";
         
         var claims = new[] {
@@ -35,12 +34,12 @@ public static class LoginUserHandler
             new Claim(JwtRegisteredClaimNames.Email, userEmail),
         };
         
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
+        var key = DiaryAppSettings.GetJwtKey();
         var signingAlgo = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         
         var token = new JwtSecurityToken(
-            issuer,
-            audience,
+            DiaryAppSettings.GetIssuer(),
+            DiaryAppSettings.GetAudience(),
             claims,
             expires: DateTime.Now.AddDays(60),
             signingCredentials: signingAlgo);
