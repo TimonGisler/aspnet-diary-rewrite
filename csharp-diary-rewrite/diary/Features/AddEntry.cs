@@ -7,18 +7,12 @@ namespace csharp_diary_rewrite.Features
     
     public class AddEntry
     {
-        public long SaveEntry(HttpContext context, DiaryDbContext diaryDbContext)
+        public void SaveEntry(SaveEntryCommand saveEntryCommand, DiaryDbContext diaryDbContext)
         {
-            Console.WriteLine(context.Request.Body.ToString());
-            long milliseconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-            Console.WriteLine(milliseconds);
-            
-            Entry entry = new Entry { Title = milliseconds.ToString() };
+            var entry = new Entry { Title = saveEntryCommand.Title, EntryText = saveEntryCommand.Text };
             
             diaryDbContext.Entries.Add(entry);
             diaryDbContext.SaveChanges();
-            
-            return milliseconds;
         }
     }
 }

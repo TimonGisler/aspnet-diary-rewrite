@@ -31,6 +31,10 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
         var response = _diaryApplicationWrapper.SaveEntry(new SaveEntryCommand("test title", "test text"), jwt);
 
         response.EnsureSuccessStatusCode();
+        var entry = _diaryApplicationWrapper.GetDbContext().Entries
+            .FirstOrDefault(e => e.Title == "test title");
+        Assert.NotNull(entry);
+
     }
 
     [Fact]

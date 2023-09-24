@@ -10,7 +10,6 @@ public static class RegisterUserHandler
 {
     public static async Task RegisterUser(RegisterUserCommand registerUserCommand, UserManager<DiaryUser> userManager)
     {
-        Console.WriteLine("EXECUTED");
         var user = new DiaryUser
         {
             UserName = registerUserCommand.Email,

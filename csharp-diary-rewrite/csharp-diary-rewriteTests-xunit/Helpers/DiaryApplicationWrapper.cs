@@ -1,7 +1,9 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
 using csharp_diary_rewrite.Features;
 using csharp_diary_rewrite.Model;
+using Newtonsoft.Json;
 
 namespace csharp_diary_rewriteTests_xunit.Helpers;
 
@@ -65,8 +67,12 @@ public class DiaryApplicationWrapper
     
     public HttpResponseMessage SaveEntry(SaveEntryCommand saveEntryCommand, string jwt = "")
     {
+        var json = JsonConvert.SerializeObject(saveEntryCommand);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        
         var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/api/entry");
         requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+        requestMessage.Content = data;
             
         return _httpClient.SendAsync(requestMessage).Result;
     }
