@@ -78,7 +78,8 @@ public static class ApiRoutesExtensionFunctions
         AddEntry addEntryHandler = new AddEntry();
 
         endpoints.MapGet("/api", Handler());
-        endpoints.MapPost("/entry", addEntryHandler.SaveEntry);
+        endpoints.MapPost("/entry", addEntryHandler.SaveEntry)
+            .RequireAuthorization();
 
         endpoints.MapPost("/register", RegisterUserHandler.RegisterUser);
         endpoints.MapPost("/login", LoginUserHandler.LoginUser);

@@ -7,6 +7,7 @@ namespace csharp_diary_rewrite.Model
         public int Id { get; set; }
         public string? Title { get; set; }
         public string? Text { get; set; }
-        public string? Created { get; set; }
+        
+        public DateTimeOffset Created { get; set; }
     }
 }

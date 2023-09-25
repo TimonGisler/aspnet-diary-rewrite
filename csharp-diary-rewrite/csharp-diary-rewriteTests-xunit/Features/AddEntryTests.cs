@@ -19,7 +19,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
     [Fact]
     public void not_logged_in_user_cannot_save_anything()
     {
-       var response = _diaryApplicationWrapper.SaveEntry(new SaveEntryCommand("test title", "test text"));
+       var response = _diaryApplicationWrapper.SaveEntry(new SaveEntryCommand("test title for not_logged_in_user_cannot_save_anything", "test text for not_logged_in_user_cannot_save_anything"));
         
         Assert.True(response.StatusCode == HttpStatusCode.Unauthorized);
     }
@@ -27,12 +27,15 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
     [Fact]
     public void logged_in_user_can_save_entry()
     {
+        var title = "logged_in_user_can_save_entry title";
+        var text = "logged_in_user_can_save_entry text";
+        
         var jwt = _diaryApplicationWrapper.RetrieveJwtFromRegisteredUser();
-        var response = _diaryApplicationWrapper.SaveEntry(new SaveEntryCommand("test title", "test text"), jwt);
+        var response = _diaryApplicationWrapper.SaveEntry(new SaveEntryCommand(title, text), jwt);
 
         response.EnsureSuccessStatusCode();
         var entry = _diaryApplicationWrapper.GetDbContext().Entries
-            .FirstOrDefault(e => e.Title == "test title");
+            .FirstOrDefault(e => e.Title == title);
         Assert.NotNull(entry);
 
     }
@@ -40,7 +43,17 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
     [Fact]
     public void saved_entry_contains_creation_date()
     {
-        Assert.Fail("Not Implemented");
+        var title = "saved_entry_contains_creation_date title"; //TODO TGIS, probably should the api return the id of the entry or smth
+        var jwt = _diaryApplicationWrapper.RetrieveJwtFromRegisteredUser();
+        DateTimeOffset timeLowerBound = DateTimeOffset.UtcNow.AddMinutes(-5);
+        DateTimeOffset timeUpperBound = DateTimeOffset.UtcNow.AddMinutes(5);
+        
+        var response = _diaryApplicationWrapper.SaveEntry(new SaveEntryCommand(title, "test text"), jwt);
+        response.EnsureSuccessStatusCode();
+        var entry = _diaryApplicationWrapper.GetDbContext().Entries
+            .FirstOrDefault(e => e.Title == title);
+
+        Assert.InRange(entry!.Created, timeLowerBound, timeUpperBound);
     }
     
     [Fact]
