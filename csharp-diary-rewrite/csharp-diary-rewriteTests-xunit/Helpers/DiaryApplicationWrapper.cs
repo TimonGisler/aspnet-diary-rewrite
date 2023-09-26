@@ -59,11 +59,6 @@ public class DiaryApplicationWrapper
     {
         return _diaryDbContext;
     }
-
-    // public HttpResponseMessage SaveEntry(SaveEntryCommand saveEntryCommand)
-    // {
-    //     return _httpClient.PostAsJsonAsync("/api/entry", saveEntryCommand).Result;
-    // }
     
     public HttpResponseMessage SaveEntry(SaveEntryCommand saveEntryCommand, string jwt = "")
     {

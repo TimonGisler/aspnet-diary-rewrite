@@ -26,9 +26,6 @@ public static class LoginUserHandler
 
     private static string GenerateToken(string userId, string userEmail)
     {
-        //TODO TGIS, how do I set this best?
-        var audience = "audience is my server e.g. diaryApp.com";
-        
         var claims = new[] {
             new Claim(JwtRegisteredClaimNames.Sub, userId),
             new Claim(JwtRegisteredClaimNames.Email, userEmail),
