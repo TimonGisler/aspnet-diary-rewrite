@@ -71,4 +71,13 @@ public class DiaryApplicationWrapper
             
         return _httpClient.SendAsync(requestMessage).Result;
     }
+    
+    /**
+     * Saves an entry using the testUser which was created in the constructor.
+     */
+    public HttpResponseMessage SaveEntryAsRegisteredUser(SaveEntryCommand saveEntryCommand)
+    {
+        var jwt = RetrieveJwtFromRegisteredUser();
+        return SaveEntry(saveEntryCommand, jwt);
+    }
 }

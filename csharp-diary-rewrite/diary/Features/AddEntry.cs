@@ -5,10 +5,11 @@ using csharp_diary_rewrite.Model;
 namespace csharp_diary_rewrite.Features
 {
     public record SaveEntryCommand(string Title, string Text);
+    public record SaveEntryResponse(int EntryId, string Title, string Text, DateTimeOffset Created);
 
     public class AddEntry
     {
-        public void SaveEntry(SaveEntryCommand saveEntryCommand, DiaryDbContext diaryDbContext, ClaimsPrincipal user)
+        public SaveEntryResponse SaveEntry(SaveEntryCommand saveEntryCommand, DiaryDbContext diaryDbContext, ClaimsPrincipal user)
         {
             var userId = user.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             var creator = diaryDbContext.Users.Find(userId);
@@ -22,6 +23,8 @@ namespace csharp_diary_rewrite.Features
 
             diaryDbContext.Entries.Add(entry);
             diaryDbContext.SaveChanges();
+            
+            return new SaveEntryResponse(entry.Id, entry.Title, entry.Text, entry.Created);
         }
     }
 }
