@@ -80,4 +80,21 @@ public class DiaryApplicationWrapper
         var jwt = RetrieveJwtFromRegisteredUser();
         return SaveEntry(saveEntryCommand, jwt);
     }
+
+    public HttpResponseMessage DeleteEntry(int testEntryId, string jwt = "")
+    {
+        var requestMessage = new HttpRequestMessage(HttpMethod.Delete, $"/api/entry/{testEntryId}");
+        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+            
+        return _httpClient.SendAsync(requestMessage).Result;
+    }
+
+    /**
+     * Deletes an entry using the testUser which was created in the constructor.
+     */
+    public HttpResponseMessage DeleteEntryAsRegisteredUser(int testEntryId)
+    {
+        var jwt = RetrieveJwtFromRegisteredUser();
+        return DeleteEntry(testEntryId, jwt);
+    }
 }

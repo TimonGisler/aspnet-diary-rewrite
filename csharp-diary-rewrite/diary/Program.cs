@@ -80,7 +80,8 @@ public static class ApiRoutesExtensionFunctions
         endpoints.MapGet("/api", Handler());
         endpoints.MapPost("/entry", addEntryHandler.SaveEntry)
             .RequireAuthorization();
-
+        endpoints.MapDelete("/entry/{entryToDeleteId}", DeleteEntryHandler.DeleteEntry)
+            .RequireAuthorization();
         endpoints.MapPost("/register", RegisterUserHandler.RegisterUser);
         endpoints.MapPost("/login", LoginUserHandler.LoginUser);
 
