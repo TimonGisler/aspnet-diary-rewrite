@@ -1,4 +1,5 @@
-﻿using csharp_diary_rewriteTests_xunit.Helpers;
+﻿using System.Net;
+using csharp_diary_rewriteTests_xunit.Helpers;
 using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
@@ -16,7 +17,8 @@ public class GetEntriesOverviewTest : IClassFixture<DiaryApplicationWrapper>
     [Fact]
     public void not_logged_in_user_should_not_be_able_to_fetch_any_entries()
     {
-        Assert.Fail("Not Implemented");
+        var response = _diaryApplicationWrapper.GetEntriesOverview();
+        Assert.True(response.StatusCode == HttpStatusCode.Unauthorized);
     }
 
     [Fact]

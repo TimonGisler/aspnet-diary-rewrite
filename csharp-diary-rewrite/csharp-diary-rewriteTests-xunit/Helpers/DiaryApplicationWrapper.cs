@@ -104,4 +104,12 @@ public class DiaryApplicationWrapper
         var jwt = RetrieveJwtFromRegisteredUser1();
         return DeleteEntry(testEntryId, jwt);
     }
+
+    public HttpResponseMessage GetEntriesOverview(string jwt = "")
+    {
+        var requestMessage = new HttpRequestMessage(HttpMethod.Get, $"/api/entry");
+        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+            
+        return _httpClient.SendAsync(requestMessage).Result;
+    }
 }
