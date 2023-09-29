@@ -19,7 +19,7 @@ public class LoginUserTest : IClassFixture<DiaryApplicationWrapper>
     [Fact]
     public async Task logging_in_with_valid_credentials_returns_jwt()
     {
-        string jwt = _diaryApplicationWrapper.RetrieveJwtFromRegisteredUser();
+        string jwt = _diaryApplicationWrapper.RetrieveJwtFromRegisteredUser1();
 
         //try and create a JwtSecurityToken from the jwt string --> if not possible it is not correct format
         var jwtTokenObject = new JwtSecurityToken(jwt);

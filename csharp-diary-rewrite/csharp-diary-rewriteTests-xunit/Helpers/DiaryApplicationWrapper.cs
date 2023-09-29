@@ -20,7 +20,8 @@ public class DiaryApplicationWrapper
     private readonly DiaryDbContext _diaryDbContext;
 
     //Data to seed in constructor
-    private readonly UserData _userSavedInDatabase = new UserData("testUserMail@test.com", "testPw123");
+    public UserData UserSavedInDatabase1 { get; } = new UserData("testUserMail1@test.com", "testPw123");
+    public UserData UserSavedInDatabase2 { get; } = new UserData("testUserMail2@test.com", "testPw123");
 
     public DiaryApplicationWrapper()
     {
@@ -29,11 +30,10 @@ public class DiaryApplicationWrapper
         _diaryDbContext = customWebApplicationFactory.diaryDbContext;
 
         //seed database with common test data
-        RegisterUser(new RegisterUserCommand(_userSavedInDatabase.Email, _userSavedInDatabase.Password));
+        RegisterUser(new RegisterUserCommand(UserSavedInDatabase1.Email, UserSavedInDatabase1.Password));
+        RegisterUser(new RegisterUserCommand(UserSavedInDatabase2.Email, UserSavedInDatabase2.Password));
     }
-
-    public UserData UserSavedInDatabase => _userSavedInDatabase;
-
+    
     public HttpResponseMessage RegisterUser(RegisterUserCommand registerUserCommand)
     {
         return _httpClient.PostAsJsonAsync("/api/register", registerUserCommand).Result;
@@ -45,9 +45,14 @@ public class DiaryApplicationWrapper
         return _httpClient.PostAsJsonAsync("/api/login", loginUserCommand).Result;
     }
     
-    public string RetrieveJwtFromRegisteredUser()
+    public string RetrieveJwtFromRegisteredUser1()
     {
-        return RetrieveJwtFromRegisteredUser(new LoginUserCommand(UserSavedInDatabase.Email, UserSavedInDatabase.Password));
+        return RetrieveJwtFromRegisteredUser(new LoginUserCommand(UserSavedInDatabase1.Email, UserSavedInDatabase1.Password));
+    }
+    
+    public string RetrieveJwtFromRegisteredUser2()
+    {
+        return RetrieveJwtFromRegisteredUser(new LoginUserCommand(UserSavedInDatabase2.Email, UserSavedInDatabase2.Password));
     }
     
     public string RetrieveJwtFromRegisteredUser(LoginUserCommand loginUserCommand)
@@ -79,7 +84,7 @@ public class DiaryApplicationWrapper
      */
     public HttpResponseMessage SaveEntryAsRegisteredUser(SaveEntryCommand saveEntryCommand)
     {
-        var jwt = RetrieveJwtFromRegisteredUser();
+        var jwt = RetrieveJwtFromRegisteredUser1();
         return SaveEntry(saveEntryCommand, jwt);
     }
 
@@ -96,7 +101,7 @@ public class DiaryApplicationWrapper
      */
     public HttpResponseMessage DeleteEntryAsRegisteredUser(int testEntryId)
     {
-        var jwt = RetrieveJwtFromRegisteredUser();
+        var jwt = RetrieveJwtFromRegisteredUser1();
         return DeleteEntry(testEntryId, jwt);
     }
 }

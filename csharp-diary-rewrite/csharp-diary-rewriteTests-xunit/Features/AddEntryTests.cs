@@ -59,7 +59,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
     public void saved_entry_is_associated_with_current_user()
     {
         const string title = "saved_entry_is_associated_with_current_user title"; 
-        var registeredUserEmail = _diaryApplicationWrapper.UserSavedInDatabase.Email;
+        var registeredUserEmail = _diaryApplicationWrapper.UserSavedInDatabase1.Email;
         
         var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser(new SaveEntryCommand(title, "test text"));
         var entry = _diaryApplicationWrapper.GetDbContext().Entries.Include(entry => entry.Creator)
@@ -73,7 +73,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
     public void saved_entry_gets_returned_in_the_response()
     {
         const string title = "saved_entry_gets_returned_in_the_response title";
-        var registeredUserEmail = _diaryApplicationWrapper.UserSavedInDatabase.Email;
+        var registeredUserEmail = _diaryApplicationWrapper.UserSavedInDatabase1.Email;
         
         var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser(new SaveEntryCommand(title, "test text"));
         var savedEntry = _diaryApplicationWrapper.GetDbContext().Entries.Include(entry => entry.Creator)
