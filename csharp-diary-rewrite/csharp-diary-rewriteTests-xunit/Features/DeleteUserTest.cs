@@ -1,9 +1,18 @@
-﻿using Xunit;
+﻿using csharp_diary_rewriteTests_xunit.Helpers;
+using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class DeleteUserTest
+public class DeleteUserTest : IClassFixture<DiaryApplicationWrapper>
 {
+    
+    private readonly DiaryApplicationWrapper _diaryApplicationWrapper;
+    
+    public DeleteUserTest(DiaryApplicationWrapper diaryApplicationWrapper)
+    {
+        _diaryApplicationWrapper = diaryApplicationWrapper;
+    }
+    
     [Fact]
     public void user_can_delete_his_account()
     {
