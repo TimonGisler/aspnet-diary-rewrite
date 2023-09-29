@@ -47,11 +47,13 @@ public class DiaryApplicationWrapper
     
     public string RetrieveJwtFromRegisteredUser()
     {
-        var loginUserCommand = new LoginUserCommand(UserSavedInDatabase.Email, UserSavedInDatabase.Password);
+        return RetrieveJwtFromRegisteredUser(new LoginUserCommand(UserSavedInDatabase.Email, UserSavedInDatabase.Password));
+    }
+    
+    public string RetrieveJwtFromRegisteredUser(LoginUserCommand loginUserCommand)
+    {
         var response = LoginUser(loginUserCommand);
-        string jwt =  response.Content.ReadAsStringAsync().Result;
-
-        return jwt;
+        return  response.Content.ReadAsStringAsync().Result;
     }
 
     //get dbContext

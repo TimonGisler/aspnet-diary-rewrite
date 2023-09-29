@@ -30,7 +30,21 @@ public class DeleteEntryTest: IClassFixture<DiaryApplicationWrapper>
     [Fact]
     public void user_is_unable_to_delete_entry_from_someone_else()
     {
-        Assert.Fail("Not Implemented");
+        //register a new user 
+        var email = "testuser2@deleteTest.com";
+        var pw = "pw2";
+        var respone= _diaryApplicationWrapper.RegisterUser(new RegisterUserCommand(email, pw));
+        respone.EnsureSuccessStatusCode();
+        var jwt = _diaryApplicationWrapper.RetrieveJwtFromRegisteredUser(new LoginUserCommand(email, pw));
+        //save entry with new user
+        var entrySaveResponse = _diaryApplicationWrapper.SaveEntry(new SaveEntryCommand("test title for DeleteEntryTest", "test text for DeleteEntryTest"), jwt);
+        entrySaveResponse.EnsureSuccessStatusCode();
+        var savedEntryId = entrySaveResponse.Content.ReadAsAsync<SaveEntryResponse>().Result.EntryId;
+        
+        //try to delete entry with first user
+        var entryDeleteResponse = _diaryApplicationWrapper.DeleteEntryAsRegisteredUser(savedEntryId);
+        
+        Assert.True(entryDeleteResponse.StatusCode == HttpStatusCode.UnprocessableEntity); //it should be unprocessable because this entry does not exist from the view of user 1
     }
 
     [Fact]
