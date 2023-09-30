@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using csharp_diary_rewrite.Features;
 using csharp_diary_rewriteTests_xunit.Helpers;
 using Xunit;
 
@@ -24,6 +25,22 @@ public class GetEntriesOverviewTest : IClassFixture<DiaryApplicationWrapper>
     [Fact]
     public void overview_only_returns_entries_of_this_user()
     {
-        Assert.Fail("Not Implemented");
+        //create entries with user 1
+        var createEntryCommand = new SaveEntryCommand("entry1 for user1", "overview_only_returns_entries_of_this_user");
+        _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(createEntryCommand);
+        var createEntryCommand2 = new SaveEntryCommand("entry2 for user1", "overview_only_returns_entries_of_this_user");
+        _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(createEntryCommand);
+        
+        //create entry with user 2
+        var createEntryCommand3 = new SaveEntryCommand("entry1 for user2", "overview_only_returns_entries_of_this_user");
+        _diaryApplicationWrapper.SaveEntryAsRegisteredUser2(createEntryCommand3);
+        
+        //get overview with user 1
+        var jwt = _diaryApplicationWrapper.RetrieveJwtFromRegisteredUser1();
+        var response = _diaryApplicationWrapper.GetEntriesOverview(jwt);
+        
+        response.EnsureSuccessStatusCode();
+        var entries = response.Content.ReadAsAsync<List<EntryOverview>>().Result;
+        Assert.Equal(2, entries.Count);
     }
 }

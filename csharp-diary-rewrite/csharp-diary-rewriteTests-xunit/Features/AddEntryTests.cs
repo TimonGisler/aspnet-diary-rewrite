@@ -31,7 +31,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
         const string title = "logged_in_user_can_save_entry title";
         const string text = "logged_in_user_can_save_entry text";
         
-        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser(new SaveEntryCommand(title, text));
+        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(new SaveEntryCommand(title, text));
 
         response.EnsureSuccessStatusCode();
         var entry = _diaryApplicationWrapper.GetDbContext().Entries
@@ -47,7 +47,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
         var timeLowerBound = DateTimeOffset.UtcNow.AddMinutes(-5);
         var timeUpperBound = DateTimeOffset.UtcNow.AddMinutes(5);
         
-        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser(new SaveEntryCommand(title, "test text"));
+        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(new SaveEntryCommand(title, "test text"));
         var entry = _diaryApplicationWrapper.GetDbContext().Entries
             .Single(e => e.Title == title);
 
@@ -61,7 +61,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
         const string title = "saved_entry_is_associated_with_current_user title"; 
         var registeredUserEmail = _diaryApplicationWrapper.UserSavedInDatabase1.Email;
         
-        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser(new SaveEntryCommand(title, "test text"));
+        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(new SaveEntryCommand(title, "test text"));
         var entry = _diaryApplicationWrapper.GetDbContext().Entries.Include(entry => entry.Creator)
             .Single(e => e.Title == title);
         
@@ -75,7 +75,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
         const string title = "saved_entry_gets_returned_in_the_response title";
         var registeredUserEmail = _diaryApplicationWrapper.UserSavedInDatabase1.Email;
         
-        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser(new SaveEntryCommand(title, "test text"));
+        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(new SaveEntryCommand(title, "test text"));
         var savedEntry = _diaryApplicationWrapper.GetDbContext().Entries.Include(entry => entry.Creator)
             .Single(e => e.Title == title);
         

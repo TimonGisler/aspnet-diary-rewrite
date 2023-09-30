@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace csharp_diary_rewriteTests_xunit.Helpers;
 
+//TODO TGIS, split this into 3 classes, one for user1 one for user 2 and one unauthenticated
 public record UserData(string Email, string Password); //user data for testing
 
 /**
@@ -33,7 +34,7 @@ public class DiaryApplicationWrapper
         RegisterUser(new RegisterUserCommand(UserSavedInDatabase1.Email, UserSavedInDatabase1.Password));
         RegisterUser(new RegisterUserCommand(UserSavedInDatabase2.Email, UserSavedInDatabase2.Password));
     }
-    
+
     public HttpResponseMessage RegisterUser(RegisterUserCommand registerUserCommand)
     {
         return _httpClient.PostAsJsonAsync("/api/register", registerUserCommand).Result;
@@ -44,21 +45,23 @@ public class DiaryApplicationWrapper
         //TODO TGIS, it may be more performant if I make this async, but while testing there did not seem to be any differencebut this was probably because all those methods were only used once -\_(o.o)_/-
         return _httpClient.PostAsJsonAsync("/api/login", loginUserCommand).Result;
     }
-    
+
     public string RetrieveJwtFromRegisteredUser1()
     {
-        return RetrieveJwtFromRegisteredUser(new LoginUserCommand(UserSavedInDatabase1.Email, UserSavedInDatabase1.Password));
+        return RetrieveJwtFromRegisteredUser(new LoginUserCommand(UserSavedInDatabase1.Email,
+            UserSavedInDatabase1.Password));
     }
-    
+
     public string RetrieveJwtFromRegisteredUser2()
     {
-        return RetrieveJwtFromRegisteredUser(new LoginUserCommand(UserSavedInDatabase2.Email, UserSavedInDatabase2.Password));
+        return RetrieveJwtFromRegisteredUser(new LoginUserCommand(UserSavedInDatabase2.Email,
+            UserSavedInDatabase2.Password));
     }
-    
+
     public string RetrieveJwtFromRegisteredUser(LoginUserCommand loginUserCommand)
     {
         var response = LoginUser(loginUserCommand);
-        return  response.Content.ReadAsStringAsync().Result;
+        return response.Content.ReadAsStringAsync().Result;
     }
 
     //get dbContext
@@ -66,25 +69,34 @@ public class DiaryApplicationWrapper
     {
         return _diaryDbContext;
     }
-    
+
     public HttpResponseMessage SaveEntry(SaveEntryCommand saveEntryCommand, string jwt = "")
     {
         var json = JsonConvert.SerializeObject(saveEntryCommand);
         var data = new StringContent(json, Encoding.UTF8, "application/json");
-        
+
         var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/api/entry");
         requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
         requestMessage.Content = data;
-            
+
         return _httpClient.SendAsync(requestMessage).Result;
     }
-    
+
     /**
-     * Saves an entry using the testUser which was created in the constructor.
+     * Saves an entry using the testUser1 which was created in the constructor.
      */
-    public HttpResponseMessage SaveEntryAsRegisteredUser(SaveEntryCommand saveEntryCommand)
+    public HttpResponseMessage SaveEntryAsRegisteredUser1(SaveEntryCommand saveEntryCommand)
     {
         var jwt = RetrieveJwtFromRegisteredUser1();
+        return SaveEntry(saveEntryCommand, jwt);
+    }
+
+    /**
+     * Saves an entry using the testUser2 which was created in the constructor.
+     */
+    public HttpResponseMessage SaveEntryAsRegisteredUser2(SaveEntryCommand saveEntryCommand)
+    {
+        var jwt = RetrieveJwtFromRegisteredUser2();
         return SaveEntry(saveEntryCommand, jwt);
     }
 
@@ -92,7 +104,7 @@ public class DiaryApplicationWrapper
     {
         var requestMessage = new HttpRequestMessage(HttpMethod.Delete, $"/api/entry/{testEntryId}");
         requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
-            
+
         return _httpClient.SendAsync(requestMessage).Result;
     }
 
@@ -109,7 +121,7 @@ public class DiaryApplicationWrapper
     {
         var requestMessage = new HttpRequestMessage(HttpMethod.Get, $"/api/entry");
         requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
-            
+
         return _httpClient.SendAsync(requestMessage).Result;
     }
 }

@@ -15,7 +15,7 @@ public class DeleteEntryTest: IClassFixture<DiaryApplicationWrapper>
         _diaryApplicationWrapper = diaryApplicationWrapper;
         
         //create testEntry which I will attempt to delete in the tests
-        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser(new SaveEntryCommand("test title for DeleteEntryTest", "test text for DeleteEntryTest"));
+        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(new SaveEntryCommand("test title for DeleteEntryTest", "test text for DeleteEntryTest"));
         var entryInResponse = response.Content.ReadAsAsync<SaveEntryResponse>().Result;
         _testEntryId = entryInResponse.EntryId;
     }
