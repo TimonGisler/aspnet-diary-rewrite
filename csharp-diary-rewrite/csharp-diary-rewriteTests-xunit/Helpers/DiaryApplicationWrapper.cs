@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace csharp_diary_rewriteTests_xunit.Helpers;
 
-//TODO TGIS, split this into 3 classes, one for user1 one for user 2 and one unauthenticated
+//TODO TGIS, split this into 3 classes, one for user1 one for user 2 and one unauthenticated6
 public record UserData(string Email, string Password); //user data for testing
 
 /**

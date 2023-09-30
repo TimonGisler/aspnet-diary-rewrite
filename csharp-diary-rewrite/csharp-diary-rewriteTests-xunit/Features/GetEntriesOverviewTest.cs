@@ -26,10 +26,13 @@ public class GetEntriesOverviewTest : IClassFixture<DiaryApplicationWrapper>
     public void overview_only_returns_entries_of_this_user()
     {
         //create entries with user 1
-        var createEntryCommand = new SaveEntryCommand("entry1 for user1", "overview_only_returns_entries_of_this_user");
+        var entry1Title = "entry1 for user1";
+        var entry2Title = "entry2 for user1";
+
+        var createEntryCommand = new SaveEntryCommand(entry1Title, "overview_only_returns_entries_of_this_user");
         _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(createEntryCommand);
-        var createEntryCommand2 = new SaveEntryCommand("entry2 for user1", "overview_only_returns_entries_of_this_user");
-        _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(createEntryCommand);
+        var createEntryCommand2 = new SaveEntryCommand(entry2Title, "overview_only_returns_entries_of_this_user");
+        _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(createEntryCommand2);
         
         //create entry with user 2
         var createEntryCommand3 = new SaveEntryCommand("entry1 for user2", "overview_only_returns_entries_of_this_user");
@@ -42,5 +45,7 @@ public class GetEntriesOverviewTest : IClassFixture<DiaryApplicationWrapper>
         response.EnsureSuccessStatusCode();
         var entries = response.Content.ReadAsAsync<List<EntryOverview>>().Result;
         Assert.Equal(2, entries.Count);
+        Assert.Contains(entries, e => e.Title == entry1Title);
+        Assert.Contains(entries, e => e.Title == entry2Title);
     }
 }
