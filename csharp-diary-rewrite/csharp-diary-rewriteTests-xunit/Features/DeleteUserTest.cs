@@ -3,14 +3,21 @@ using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class DeleteUserTest : IClassFixture<DiaryApplicationWrapper>
+public class DeleteUserTest : IClassFixture<DiaryApplicationWrapperFactory>
 {
     
-    private readonly DiaryApplicationWrapper _diaryApplicationWrapper;
+    private readonly DiaryApplicationClient _unauthenticatedDiaryApplicationClient;
+    private readonly DiaryApplicationClient _diaryApplicationClientForUser1;
+    private readonly DiaryApplicationClient _diaryApplicationClientForUser2;
     
-    public DeleteUserTest(DiaryApplicationWrapper diaryApplicationWrapper)
+    private readonly DiaryApplicationClient _diaryApplicationClient;
+    
+    public DeleteUserTest(DiaryApplicationWrapperFactory diaryApplicationWrapperFactory)
     {
-        _diaryApplicationWrapper = diaryApplicationWrapper;
+        _unauthenticatedDiaryApplicationClient = diaryApplicationWrapperFactory.DiaryApplicationClientForUnauthenticatedUser;
+        _diaryApplicationClientForUser1 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser1;
+        _diaryApplicationClientForUser2 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser2;
+
     }
     
     [Fact]

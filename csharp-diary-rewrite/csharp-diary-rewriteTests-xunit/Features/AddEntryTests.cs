@@ -6,21 +6,26 @@ using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
+
+public class AddEntryTests : IClassFixture<DiaryApplicationWrapperFactory>
 {
     
-    private readonly DiaryApplicationWrapper _diaryApplicationWrapper;
+    private readonly DiaryApplicationClient _unauthenticatedDiaryApplicationClient;
+    private readonly DiaryApplicationClient _diaryApplicationClientForUser1;
+    private readonly DiaryApplicationClient _diaryApplicationClientForUser2;
     
-    public AddEntryTests(DiaryApplicationWrapper diaryApplicationWrapper)
+    public AddEntryTests(DiaryApplicationWrapperFactory diaryApplicationWrapperFactory)
     {
-        _diaryApplicationWrapper = diaryApplicationWrapper;
+        _unauthenticatedDiaryApplicationClient = diaryApplicationWrapperFactory.DiaryApplicationClientForUnauthenticatedUser;
+        _diaryApplicationClientForUser1 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser1;
+        _diaryApplicationClientForUser2 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser2;
     }
     
     
     [Fact]
     public void not_logged_in_user_cannot_save_anything()
     {
-       var response = _diaryApplicationWrapper.SaveEntry(new SaveEntryCommand("test title for not_logged_in_user_cannot_save_anything", "test text for not_logged_in_user_cannot_save_anything"));
+       var response = _unauthenticatedDiaryApplicationClient.SaveEntry(new SaveEntryCommand("test title for not_logged_in_user_cannot_save_anything", "test text for not_logged_in_user_cannot_save_anything"));
         
         Assert.True(response.StatusCode == HttpStatusCode.Unauthorized);
     }
@@ -31,10 +36,10 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
         const string title = "logged_in_user_can_save_entry title";
         const string text = "logged_in_user_can_save_entry text";
         
-        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(new SaveEntryCommand(title, text));
+        var response = _diaryApplicationClientForUser1.SaveEntry(new SaveEntryCommand(title, text));
 
         response.EnsureSuccessStatusCode();
-        var entry = _diaryApplicationWrapper.GetDbContext().Entries
+        var entry = _unauthenticatedDiaryApplicationClient.GetDbContext().Entries
             .FirstOrDefault(e => e.Title == title);
         Assert.NotNull(entry);
 
@@ -47,8 +52,8 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
         var timeLowerBound = DateTimeOffset.UtcNow.AddMinutes(-5);
         var timeUpperBound = DateTimeOffset.UtcNow.AddMinutes(5);
         
-        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(new SaveEntryCommand(title, "test text"));
-        var entry = _diaryApplicationWrapper.GetDbContext().Entries
+        var response = _diaryApplicationClientForUser1.SaveEntry(new SaveEntryCommand(title, "test text"));
+        var entry = _diaryApplicationClientForUser1.GetDbContext().Entries
             .Single(e => e.Title == title);
 
         response.EnsureSuccessStatusCode();
@@ -59,10 +64,10 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
     public void saved_entry_is_associated_with_current_user()
     {
         const string title = "saved_entry_is_associated_with_current_user title"; 
-        var registeredUserEmail = _diaryApplicationWrapper.UserSavedInDatabase1.Email;
+        var registeredUserEmail = _diaryApplicationClientForUser1.UserOfThisClient!.Email;
         
-        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(new SaveEntryCommand(title, "test text"));
-        var entry = _diaryApplicationWrapper.GetDbContext().Entries.Include(entry => entry.Creator)
+        var response = _diaryApplicationClientForUser1.SaveEntry(new SaveEntryCommand(title, "test text"));
+        var entry = _diaryApplicationClientForUser1.GetDbContext().Entries.Include(entry => entry.Creator)
             .Single(e => e.Title == title);
         
         response.EnsureSuccessStatusCode();
@@ -73,10 +78,9 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapper>
     public void saved_entry_gets_returned_in_the_response()
     {
         const string title = "saved_entry_gets_returned_in_the_response title";
-        var registeredUserEmail = _diaryApplicationWrapper.UserSavedInDatabase1.Email;
         
-        var response = _diaryApplicationWrapper.SaveEntryAsRegisteredUser1(new SaveEntryCommand(title, "test text"));
-        var savedEntry = _diaryApplicationWrapper.GetDbContext().Entries.Include(entry => entry.Creator)
+        var response = _diaryApplicationClientForUser1.SaveEntry(new SaveEntryCommand(title, "test text"));
+        var savedEntry = _diaryApplicationClientForUser1.GetDbContext().Entries.Include(entry => entry.Creator)
             .Single(e => e.Title == title);
         
         response.EnsureSuccessStatusCode();
