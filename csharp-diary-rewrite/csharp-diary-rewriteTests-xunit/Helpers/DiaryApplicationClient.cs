@@ -17,17 +17,15 @@ public record UserData(string Email, string Password);
 public class DiaryApplicationClient
 {
     private readonly HttpClient _httpClient;
-    private readonly DiaryDbContext _diaryDbContext;
 
     private readonly string? _defaultJwtToUse;
 
     public UserData? UserOfThisClient { get; private set; }
 
 
-    public DiaryApplicationClient(CustomWebApplicationFactory customWebApplicationFactory, UserData? userOfThisClient = null)
+    public DiaryApplicationClient(HttpClient httpClient, UserData? userOfThisClient = null)
     {
-        _httpClient = customWebApplicationFactory.CreateClient();
-        _diaryDbContext = customWebApplicationFactory.diaryDbContext;
+        _httpClient = httpClient;
         UserOfThisClient = userOfThisClient;
         
         //if user is not null, then register and login this user and use the jwt for all requests
@@ -50,13 +48,6 @@ public class DiaryApplicationClient
     {
         //TODO TGIS, it may be more performant if I make this async, but while testing there did not seem to be any differencebut this was probably because all those methods were only used once -\_(o.o)_/-
         return _httpClient.PostAsJsonAsync("/api/login", loginUserCommand).Result.Content.ReadAsStringAsync().Result;
-    }
-
-
-    //get dbContext to verify that the correct data was saved
-    public DiaryDbContext GetDbContext() //TODO TGIS, could probably be replaced nicely with a property getter
-    {
-        return _diaryDbContext;
     }
 
     public HttpResponseMessage SaveEntry(SaveEntryCommand saveEntryCommand)

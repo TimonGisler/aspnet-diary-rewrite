@@ -1,22 +1,25 @@
 ﻿using csharp_diary_rewrite.Features;
+using csharp_diary_rewrite.Model;
 using csharp_diary_rewriteTests_xunit.Helpers;
 using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class RegisterUserTest : IClassFixture<DiaryApplicationWrapperFactory>
+public class RegisterUserTest : IClassFixture<TestApplicationFactory>
 {
     private readonly DiaryApplicationClient _unauthenticatedDiaryApplicationClient;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser1;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser2;
+    private readonly DiaryDbContext _diaryDbContext;
     
     private readonly DiaryApplicationClient _diaryApplicationClient;
     
-    public RegisterUserTest(DiaryApplicationWrapperFactory diaryApplicationWrapperFactory)
+    public RegisterUserTest(TestApplicationFactory testApplicationFactory)
     {
-        _unauthenticatedDiaryApplicationClient = diaryApplicationWrapperFactory.DiaryApplicationClientForUnauthenticatedUser;
-        _diaryApplicationClientForUser1 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser1;
-        _diaryApplicationClientForUser2 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser2;
+        _unauthenticatedDiaryApplicationClient = testApplicationFactory.DiaryApplicationClientForUnauthenticatedUser;
+        _diaryApplicationClientForUser1 = testApplicationFactory.DiaryApplicationClientForUser1;
+        _diaryApplicationClientForUser2 = testApplicationFactory.DiaryApplicationClientForUser2;
+        _diaryDbContext = testApplicationFactory.DiaryDbContext;
 
     }
     
@@ -31,7 +34,7 @@ public class RegisterUserTest : IClassFixture<DiaryApplicationWrapperFactory>
         var response = _diaryApplicationClient.RegisterUser(registerUserCommand);
         
         response.EnsureSuccessStatusCode(); //test if the status code is a success code (200-299)
-        var user = _diaryApplicationClient.GetDbContext().Users.FirstOrDefault(u => u.Email == mail);
+        var user = _diaryDbContext.Users.FirstOrDefault(u => u.Email == mail);
         Assert.NotNull(user); //todo tgis, make this test non modifying https://learn.microsoft.com/en-us/ef/core/testing/testing-with-the-database#tests-which-modify-data
     }
 }

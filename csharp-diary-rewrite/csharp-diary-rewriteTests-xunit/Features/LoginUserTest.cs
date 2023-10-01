@@ -6,17 +6,17 @@ using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class LoginUserTest : IClassFixture<DiaryApplicationWrapperFactory>
+public class LoginUserTest : IClassFixture<TestApplicationFactory>
 {
     private readonly DiaryApplicationClient _unauthenticatedDiaryApplicationClient;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser1;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser2;
     
-    public LoginUserTest(DiaryApplicationWrapperFactory diaryApplicationWrapperFactory)
+    public LoginUserTest(TestApplicationFactory testApplicationFactory)
     {
-        _unauthenticatedDiaryApplicationClient = diaryApplicationWrapperFactory.DiaryApplicationClientForUnauthenticatedUser;
-        _diaryApplicationClientForUser1 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser1;
-        _diaryApplicationClientForUser2 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser2;
+        _unauthenticatedDiaryApplicationClient = testApplicationFactory.DiaryApplicationClientForUnauthenticatedUser;
+        _diaryApplicationClientForUser1 = testApplicationFactory.DiaryApplicationClientForUser1;
+        _diaryApplicationClientForUser2 = testApplicationFactory.DiaryApplicationClientForUser2;
 
     }
 

@@ -3,7 +3,7 @@ using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class GetSpecificEntryTest : IClassFixture<DiaryApplicationWrapperFactory>
+public class GetSpecificEntryTest : IClassFixture<TestApplicationFactory>
 {
     
     private readonly DiaryApplicationClient _unauthenticatedDiaryApplicationClient;
@@ -12,12 +12,12 @@ public class GetSpecificEntryTest : IClassFixture<DiaryApplicationWrapperFactory
     
     private readonly DiaryApplicationClient _diaryApplicationClient;
 
-    public GetSpecificEntryTest(DiaryApplicationWrapperFactory diaryApplicationWrapperFactory)
+    public GetSpecificEntryTest(TestApplicationFactory testApplicationFactory)
     {
         _unauthenticatedDiaryApplicationClient =
-            diaryApplicationWrapperFactory.DiaryApplicationClientForUnauthenticatedUser;
-        _diaryApplicationClientForUser1 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser1;
-        _diaryApplicationClientForUser2 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser2;
+            testApplicationFactory.DiaryApplicationClientForUnauthenticatedUser;
+        _diaryApplicationClientForUser1 = testApplicationFactory.DiaryApplicationClientForUser1;
+        _diaryApplicationClientForUser2 = testApplicationFactory.DiaryApplicationClientForUser2;
     }
 
     [Fact]

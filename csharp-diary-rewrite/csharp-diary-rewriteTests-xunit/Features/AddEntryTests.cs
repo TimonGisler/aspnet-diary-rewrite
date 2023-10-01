@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using csharp_diary_rewrite.Features;
+using csharp_diary_rewrite.Model;
 using csharp_diary_rewriteTests_xunit.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -7,18 +8,20 @@ using Xunit;
 namespace csharp_diary_rewriteTests_xunit.Features;
 
 
-public class AddEntryTests : IClassFixture<DiaryApplicationWrapperFactory>
+public class AddEntryTests : IClassFixture<TestApplicationFactory>
 {
     
     private readonly DiaryApplicationClient _unauthenticatedDiaryApplicationClient;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser1;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser2;
+    private readonly DiaryDbContext _diaryDbContext;
     
-    public AddEntryTests(DiaryApplicationWrapperFactory diaryApplicationWrapperFactory)
+    public AddEntryTests(TestApplicationFactory testApplicationFactory)
     {
-        _unauthenticatedDiaryApplicationClient = diaryApplicationWrapperFactory.DiaryApplicationClientForUnauthenticatedUser;
-        _diaryApplicationClientForUser1 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser1;
-        _diaryApplicationClientForUser2 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser2;
+        _unauthenticatedDiaryApplicationClient = testApplicationFactory.DiaryApplicationClientForUnauthenticatedUser;
+        _diaryApplicationClientForUser1 = testApplicationFactory.DiaryApplicationClientForUser1;
+        _diaryApplicationClientForUser2 = testApplicationFactory.DiaryApplicationClientForUser2;
+        _diaryDbContext = testApplicationFactory.DiaryDbContext;
     }
     
     
@@ -39,7 +42,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapperFactory>
         var response = _diaryApplicationClientForUser1.SaveEntry(new SaveEntryCommand(title, text));
 
         response.EnsureSuccessStatusCode();
-        var entry = _unauthenticatedDiaryApplicationClient.GetDbContext().Entries
+        var entry = _diaryDbContext.Entries
             .FirstOrDefault(e => e.Title == title);
         Assert.NotNull(entry);
 
@@ -53,7 +56,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapperFactory>
         var timeUpperBound = DateTimeOffset.UtcNow.AddMinutes(5);
         
         var response = _diaryApplicationClientForUser1.SaveEntry(new SaveEntryCommand(title, "test text"));
-        var entry = _diaryApplicationClientForUser1.GetDbContext().Entries
+        var entry = _diaryDbContext.Entries
             .Single(e => e.Title == title);
 
         response.EnsureSuccessStatusCode();
@@ -67,7 +70,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapperFactory>
         var registeredUserEmail = _diaryApplicationClientForUser1.UserOfThisClient!.Email;
         
         var response = _diaryApplicationClientForUser1.SaveEntry(new SaveEntryCommand(title, "test text"));
-        var entry = _diaryApplicationClientForUser1.GetDbContext().Entries.Include(entry => entry.Creator)
+        var entry = _diaryDbContext.Entries.Include(entry => entry.Creator)
             .Single(e => e.Title == title);
         
         response.EnsureSuccessStatusCode();
@@ -80,7 +83,7 @@ public class AddEntryTests : IClassFixture<DiaryApplicationWrapperFactory>
         const string title = "saved_entry_gets_returned_in_the_response title";
         
         var response = _diaryApplicationClientForUser1.SaveEntry(new SaveEntryCommand(title, "test text"));
-        var savedEntry = _diaryApplicationClientForUser1.GetDbContext().Entries.Include(entry => entry.Creator)
+        var savedEntry = _diaryDbContext.Entries.Include(entry => entry.Creator)
             .Single(e => e.Title == title);
         
         response.EnsureSuccessStatusCode();

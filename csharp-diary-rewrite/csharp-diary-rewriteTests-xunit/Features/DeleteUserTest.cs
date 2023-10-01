@@ -3,25 +3,23 @@ using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class DeleteUserTest : IClassFixture<DiaryApplicationWrapperFactory>
+public class DeleteUserTest : IClassFixture<TestApplicationFactory>
 {
     
     private readonly DiaryApplicationClient _unauthenticatedDiaryApplicationClient;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser1;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser2;
     
-    private readonly DiaryApplicationClient _diaryApplicationClient;
-    
-    public DeleteUserTest(DiaryApplicationWrapperFactory diaryApplicationWrapperFactory)
+    public DeleteUserTest(TestApplicationFactory testApplicationFactory)
     {
-        _unauthenticatedDiaryApplicationClient = diaryApplicationWrapperFactory.DiaryApplicationClientForUnauthenticatedUser;
-        _diaryApplicationClientForUser1 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser1;
-        _diaryApplicationClientForUser2 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser2;
+        _unauthenticatedDiaryApplicationClient = testApplicationFactory.DiaryApplicationClientForUnauthenticatedUser;
+        _diaryApplicationClientForUser1 = testApplicationFactory.DiaryApplicationClientForUser1;
+        _diaryApplicationClientForUser2 = testApplicationFactory.DiaryApplicationClientForUser2;
 
     }
     
     [Fact]
-    public void user_can_delete_his_account()
+    public void user_deletion_deletes_user_and_all_entries_associated()
     {
         Assert.Fail("Not Implemented");
     }

@@ -4,16 +4,19 @@ using csharp_diary_rewrite.Model;
 namespace csharp_diary_rewriteTests_xunit.Helpers;
 
 
-//creates DIaryApplicationWrapper instances for different users
-public class DiaryApplicationWrapperFactory
+/**
+ * Creates various classes which are used for testing.
+ */
+public class TestApplicationFactory
 {
     
     public DiaryApplicationClient DiaryApplicationClientForUnauthenticatedUser { get; }
     public  DiaryApplicationClient DiaryApplicationClientForUser1 { get; }
     public DiaryApplicationClient DiaryApplicationClientForUser2 { get; }
+    public DiaryDbContext DiaryDbContext { get; }
     
     
-    public DiaryApplicationWrapperFactory()
+    public TestApplicationFactory()
     {
         var customWebApplicationFactory = new CustomWebApplicationFactory();
 
@@ -21,10 +24,15 @@ public class DiaryApplicationWrapperFactory
         var user1RegisterData  = new UserData("testUserMail1@test.com", "1testPw123");
         var user2RegisterData  = new UserData("testUserMail2@test.com", "2testPw123");
         
-        //create DiaryApplicationWrapper instances for users
-        DiaryApplicationClientForUnauthenticatedUser = new DiaryApplicationClient(customWebApplicationFactory);
-        DiaryApplicationClientForUser1 = new DiaryApplicationClient(customWebApplicationFactory, user1RegisterData);
-        DiaryApplicationClientForUser2 = new DiaryApplicationClient(customWebApplicationFactory, user2RegisterData);
+        //create DiaryApplicationClient instances for users
+        var httpClient = customWebApplicationFactory.CreateClient();
+        DiaryApplicationClientForUnauthenticatedUser = new DiaryApplicationClient(httpClient);
+        DiaryApplicationClientForUser1 = new DiaryApplicationClient(httpClient, user1RegisterData);
+        DiaryApplicationClientForUser2 = new DiaryApplicationClient(httpClient, user2RegisterData);
+        
+        //the database
+        DiaryDbContext = customWebApplicationFactory.diaryDbContext;
+
     }
     
     

@@ -1,23 +1,27 @@
 ﻿using System.Net;
 using csharp_diary_rewrite.Features;
+using csharp_diary_rewrite.Model;
 using csharp_diary_rewriteTests_xunit.Helpers;
 using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class DeleteEntryTest: IClassFixture<DiaryApplicationWrapperFactory>
+public class DeleteEntryTest: IClassFixture<TestApplicationFactory>
 {
     
     private readonly DiaryApplicationClient _unauthenticatedDiaryApplicationClient;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser1;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser2;
+    private readonly DiaryDbContext _diaryDbContext;
+
     
     private readonly int _testEntryId;
-    public DeleteEntryTest(DiaryApplicationWrapperFactory diaryApplicationWrapperFactory)
+    public DeleteEntryTest(TestApplicationFactory testApplicationFactory)
     {
-        _unauthenticatedDiaryApplicationClient = diaryApplicationWrapperFactory.DiaryApplicationClientForUnauthenticatedUser;
-        _diaryApplicationClientForUser1 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser1;
-        _diaryApplicationClientForUser2 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser2;
+        _unauthenticatedDiaryApplicationClient = testApplicationFactory.DiaryApplicationClientForUnauthenticatedUser;
+        _diaryApplicationClientForUser1 = testApplicationFactory.DiaryApplicationClientForUser1;
+        _diaryApplicationClientForUser2 = testApplicationFactory.DiaryApplicationClientForUser2;
+        _diaryDbContext = testApplicationFactory.DiaryDbContext;
         
         //create testEntry which I will attempt to delete in the tests
         var response = _diaryApplicationClientForUser1.SaveEntry(new SaveEntryCommand("test title for DeleteEntryTest", "test text for DeleteEntryTest"));
@@ -50,7 +54,7 @@ public class DeleteEntryTest: IClassFixture<DiaryApplicationWrapperFactory>
     public void user_can_delete_his_own_entry()
     {
         var response = _diaryApplicationClientForUser1.DeleteEntry(_testEntryId);
-        var entryInDatabase = _diaryApplicationClientForUser1.GetDbContext().Entries.Find(_testEntryId);
+        var entryInDatabase = _diaryDbContext.Entries.Find(_testEntryId);
         
         response.EnsureSuccessStatusCode();
         Assert.Null(entryInDatabase);

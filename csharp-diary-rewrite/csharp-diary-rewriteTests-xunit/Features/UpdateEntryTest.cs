@@ -1,22 +1,23 @@
-﻿using csharp_diary_rewriteTests_xunit.Helpers;
+﻿using csharp_diary_rewrite.Model;
+using csharp_diary_rewriteTests_xunit.Helpers;
 using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class UpdateEntryTest : IClassFixture<DiaryApplicationWrapperFactory>
+public class UpdateEntryTest : IClassFixture<TestApplicationFactory>
 {
     private readonly DiaryApplicationClient _unauthenticatedDiaryApplicationClient;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser1;
     private readonly DiaryApplicationClient _diaryApplicationClientForUser2;
-    
-    private readonly DiaryApplicationClient _diaryApplicationClient;
-    
-    public UpdateEntryTest(DiaryApplicationWrapperFactory diaryApplicationWrapperFactory)
-    {
-        _unauthenticatedDiaryApplicationClient = diaryApplicationWrapperFactory.DiaryApplicationClientForUnauthenticatedUser;
-        _diaryApplicationClientForUser1 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser1;
-        _diaryApplicationClientForUser2 = diaryApplicationWrapperFactory.DiaryApplicationClientForUser2;
+    private readonly DiaryDbContext _diaryDbContext;
 
+    
+    public UpdateEntryTest(TestApplicationFactory testApplicationFactory)
+    {
+        _unauthenticatedDiaryApplicationClient = testApplicationFactory.DiaryApplicationClientForUnauthenticatedUser;
+        _diaryApplicationClientForUser1 = testApplicationFactory.DiaryApplicationClientForUser1;
+        _diaryApplicationClientForUser2 = testApplicationFactory.DiaryApplicationClientForUser2;
+        _diaryDbContext = testApplicationFactory.DiaryDbContext;
     }
     
     [Fact]
