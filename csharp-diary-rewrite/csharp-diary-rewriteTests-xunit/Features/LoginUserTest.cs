@@ -24,11 +24,10 @@ public class LoginUserTest : IClassFixture<DiaryApplicationWrapperFactory>
     [Fact]
     public void logging_in_with_valid_credentials_returns_jwt()
     {
-        //TODO TGIS, what to do here?
-        // string jwt = _diaryApplicationClient.RetrieveJwtFromRegisteredUser1();
-        //
-        // //try and create a JwtSecurityToken from the jwt string --> if not possible it is not correct format
-        // var jwtTokenObject = _unauthenticatedDiaryApplicationClient.
-        // Assert.NotNull(jwtTokenObject);
+         var jwt = _diaryApplicationClientForUser1.LoginUser();
+        
+         //try and create a JwtSecurityToken from the jwt string --> if not possible it is not correct format
+         var jwtTokenObject =  new JwtSecurityToken(jwt);
+         Assert.NotNull(jwtTokenObject);
     }
 }

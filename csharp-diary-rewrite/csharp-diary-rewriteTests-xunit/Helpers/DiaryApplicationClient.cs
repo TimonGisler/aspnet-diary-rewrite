@@ -41,7 +41,12 @@ public class DiaryApplicationClient
         return _httpClient.PostAsJsonAsync("/api/register", registerUserCommand).Result;
     }
 
-    public string LoginUser(LoginUserCommand loginUserCommand)
+    public string LoginUser()
+    {
+        if (UserOfThisClient is null) throw new Exception("UserOfThisClient is null, cannot login");
+        return LoginUser(new LoginUserCommand(UserOfThisClient.Email, UserOfThisClient.Password));
+    }
+    private string LoginUser(LoginUserCommand loginUserCommand)
     {
         //TODO TGIS, it may be more performant if I make this async, but while testing there did not seem to be any differencebut this was probably because all those methods were only used once -\_(o.o)_/-
         return _httpClient.PostAsJsonAsync("/api/login", loginUserCommand).Result.Content.ReadAsStringAsync().Result;
