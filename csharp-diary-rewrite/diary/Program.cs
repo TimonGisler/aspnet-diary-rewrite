@@ -72,24 +72,26 @@ public class Program
 public static class ApiRoutesExtensionFunctions
 {
     //Extension method to map all the routes
-    public static IEndpointRouteBuilder MapApiRoutes(this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapApiRoutes(this IEndpointRouteBuilder apiEndpoints)
     {
         //TODO TGIS, move into dependency injection -> meh prolly not even encessary static class prolly good enough ngl
         AddEntry addEntryHandler = new AddEntry();
 
-        endpoints.MapPost("/entry", addEntryHandler.SaveEntry)
+        apiEndpoints.MapPost("/entry", addEntryHandler.SaveEntry)
             .RequireAuthorization();
-        endpoints.MapDelete("/entry/{entryToDeleteId:int}", DeleteEntryHandler.DeleteEntry)
+        apiEndpoints.MapDelete("/entry/{entryToDeleteId:int}", DeleteEntryHandler.DeleteEntry)
             .RequireAuthorization();
-        endpoints.MapGet("/entry", GetEntryOverviewHandler.GetEntryOverview)
+        apiEndpoints.MapGet("/entry", GetEntryOverviewHandler.GetEntryOverview)
+            .RequireAuthorization();
+        apiEndpoints.MapGet("/entry/{entryToGetId:int}", GetSpecificEntryHandler.GetSpecificEntry)
             .RequireAuthorization();
         
         
-        endpoints.MapPost("/register", RegisterUserHandler.RegisterUser);
-        endpoints.MapPost("/login", LoginUserHandler.LoginUser);
+        apiEndpoints.MapPost("/register", RegisterUserHandler.RegisterUser);
+        apiEndpoints.MapPost("/login", LoginUserHandler.LoginUser);
 
 
-        return endpoints;
+        return apiEndpoints;
     }
     
 }

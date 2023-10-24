@@ -73,7 +73,12 @@ public class DiaryApplicationClient
         var requestMessage = createRequestMessage(HttpMethod.Delete, $"/user");
         return _httpClient.SendAsync(requestMessage).Result;
     }
-
+    
+    public HttpResponseMessage GetSpecificEntry(object savedEntryId)
+    {
+        var requestMessage = createRequestMessage(HttpMethod.Get, $"/api/entry/{savedEntryId}");    
+        return _httpClient.SendAsync(requestMessage).Result;
+    }
 
     /**
      * Convenience method to create the requestmessage.
@@ -100,4 +105,5 @@ public class DiaryApplicationClient
 
         return requestMessage;
     }
+
 }

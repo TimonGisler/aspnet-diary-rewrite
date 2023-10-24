@@ -23,7 +23,14 @@ public class CustomWebApplicationFactory: WebApplicationFactory<Program>
     {
         builder.ConfigureTestServices(services =>
         {
-            // remove the options provided in the Program.cs
+            //start docker container with db
+            postgreSqlContainer = new PostgreSqlBuilder()
+                .WithImage("postgres:15.4") //use same database version as in production
+                .Build();
+
+            postgreSqlContainer.StartAsync().Wait();
+            
+            // remove the options provided in the Program.cs (with the old database connection)
             var descriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
                      typeof(DbContextOptions<DiaryDbContext>));
@@ -32,15 +39,8 @@ public class CustomWebApplicationFactory: WebApplicationFactory<Program>
             {
                 services.Remove(descriptor);
             }
-
-            //start docker container with db
-            postgreSqlContainer = new PostgreSqlBuilder()
-                .WithImage("postgres:15.4") //use same database version as in production
-                .Build();
-
-            postgreSqlContainer.StartAsync().Wait();
             
-            // Add my custom DbContextOptions which uses the test container
+            // Add my custom DbContextOptions which uses the test container db connection
             var connectionString = postgreSqlContainer.GetConnectionString();
             Console.WriteLine(connectionString);
             services.AddDbContext<DiaryDbContext>(options =>
