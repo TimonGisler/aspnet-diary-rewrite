@@ -19,11 +19,11 @@ public class DiaryApplicationClient
     private readonly HttpClient _httpClient;
 
     private readonly string? _defaultJwtToUse;
-
+    
     public UserData? UserOfThisClient { get; private set; }
 
 
-    public DiaryApplicationClient(HttpClient httpClient, UserData? userOfThisClient = null)
+    public DiaryApplicationClient(HttpClient httpClient, UserData? userOfThisClient = null) //TODO TGIS; make all the requests etc non modifying
     {
         _httpClient = httpClient;
         UserOfThisClient = userOfThisClient;
@@ -46,7 +46,7 @@ public class DiaryApplicationClient
     }
     private string LoginUser(LoginUserCommand loginUserCommand)
     {
-        //TODO TGIS, it may be more performant if I make this async, but while testing there did not seem to be any differencebut this was probably because all those methods were only used once -\_(o.o)_/-
+        //TODO TGIS, it may be more performant if I make this async, but while testing there did not seem to be any difference but this was probably because all those methods were only used once -\_(o.o)_/-
         return _httpClient.PostAsJsonAsync("/api/login", loginUserCommand).Result.Content.ReadAsStringAsync().Result;
     }
 
@@ -65,6 +65,12 @@ public class DiaryApplicationClient
     public HttpResponseMessage GetEntriesOverview()
     {
         var requestMessage = createRequestMessage(HttpMethod.Get, $"/api/entry");
+        return _httpClient.SendAsync(requestMessage).Result;
+    }
+    
+    public HttpResponseMessage DeleteUser()
+    {
+        var requestMessage = createRequestMessage(HttpMethod.Delete, $"/user");
         return _httpClient.SendAsync(requestMessage).Result;
     }
 
