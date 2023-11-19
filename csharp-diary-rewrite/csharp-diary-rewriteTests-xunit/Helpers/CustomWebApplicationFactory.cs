@@ -26,6 +26,7 @@ public class CustomWebApplicationFactory: WebApplicationFactory<Program>
             //start docker container with db
             postgreSqlContainer = new PostgreSqlBuilder()
                 .WithImage("postgres:15.4") //use same database version as in production
+                .WithPortBinding(55912, PostgreSqlBuilder.PostgreSqlPort) //bind postgres port to hostport 55912
                 .Build();
 
             postgreSqlContainer.StartAsync().Wait();
