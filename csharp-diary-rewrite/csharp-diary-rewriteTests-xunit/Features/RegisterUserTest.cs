@@ -24,6 +24,23 @@ public class RegisterUserTest : IClassFixture<TestApplicationFactory>
     
     
     [Fact]
+    public void no_two_users_with_same_mail_can_register()
+    {
+        const string mail = "testno_two_users_with_same_mail_can_register@test.com";
+        const string password = "test123";
+        
+        //register first user, everything should be okay
+        var registerUserCommand = new RegisterUserCommand(mail, password);
+        var response = _unauthenticatedDiaryApplicationClient.RegisterUser(registerUserCommand);
+        response.EnsureSuccessStatusCode(); //test if the status code is a success code (200-299)
+        
+        //register second user with same mail, should fail
+        response = _unauthenticatedDiaryApplicationClient.RegisterUser(registerUserCommand);
+        Assert.Equal(400, (int) response.StatusCode);
+
+    }
+    
+    [Fact]
     public void register_user_saves_user_in_database()
     {
         const string mail = "testregister_user_saves_user_in_database@test.com";
@@ -34,6 +51,6 @@ public class RegisterUserTest : IClassFixture<TestApplicationFactory>
         
         response.EnsureSuccessStatusCode(); //test if the status code is a success code (200-299)
         var user = _diaryDbContext.Users.FirstOrDefault(u => u.Email == mail);
-        Assert.NotNull(user); //todo tgis, make this test non modifying https://learn.microsoft.com/en-us/ef/core/testing/testing-with-the-database#tests-which-modify-data
+        Assert.NotNull(user);
     }
 }

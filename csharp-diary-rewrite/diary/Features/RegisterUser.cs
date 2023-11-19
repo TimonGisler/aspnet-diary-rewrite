@@ -8,7 +8,7 @@ public record RegisterUserCommand(string Email, string Password);
 
 public static class RegisterUserHandler
 {
-    public static async Task RegisterUser(RegisterUserCommand registerUserCommand, UserManager<DiaryUser> userManager)
+    public static async Task<IResult> RegisterUser(RegisterUserCommand registerUserCommand, UserManager<DiaryUser> userManager)
     {
         var user = new DiaryUser
         {
@@ -18,5 +18,11 @@ public static class RegisterUserHandler
         
         var result = await userManager.CreateAsync(user, registerUserCommand.Password);
 
+        if (!result.Succeeded)
+        {
+            return Results.BadRequest();
+        }
+        
+        return Results.Ok();
     }
 }
