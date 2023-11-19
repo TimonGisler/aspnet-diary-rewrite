@@ -12,7 +12,6 @@ public class RegisterUserTest : IClassFixture<TestApplicationFactory>
     private readonly DiaryApplicationClient _diaryApplicationClientForUser2;
     private readonly DiaryDbContext _diaryDbContext;
     
-    private readonly DiaryApplicationClient _diaryApplicationClient;
     
     public RegisterUserTest(TestApplicationFactory testApplicationFactory)
     {
@@ -27,11 +26,11 @@ public class RegisterUserTest : IClassFixture<TestApplicationFactory>
     [Fact]
     public void register_user_saves_user_in_database()
     {
-        const string mail = "test@test.com";
+        const string mail = "testregister_user_saves_user_in_database@test.com";
         const string password = "test123";
         var registerUserCommand = new RegisterUserCommand(mail, password);
         
-        var response = _diaryApplicationClient.RegisterUser(registerUserCommand);
+        var response = _unauthenticatedDiaryApplicationClient.RegisterUser(registerUserCommand);
         
         response.EnsureSuccessStatusCode(); //test if the status code is a success code (200-299)
         var user = _diaryDbContext.Users.FirstOrDefault(u => u.Email == mail);

@@ -36,7 +36,9 @@ public class DiaryApplicationClient
 
     public HttpResponseMessage RegisterUser(RegisterUserCommand registerUserCommand)
     {
-        return _httpClient.PostAsJsonAsync("/api/register", registerUserCommand).Result;
+        var requestMessage = createRequestMessage(HttpMethod.Post, "/api/register", registerUserCommand);
+        var result = _httpClient.SendAsync(requestMessage).Result;
+        return result;
     }
 
     public string LoginUser()
