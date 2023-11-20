@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using System.Diagnostics;
 using csharp_diary_rewrite;
 using csharp_diary_rewrite.Model;
 using Microsoft.AspNetCore.Hosting;
@@ -54,5 +55,6 @@ public class CustomWebApplicationFactory: WebApplicationFactory<Program>
             diaryDbContext!.Database.Migrate();
 
         });
+        
     }
 }
