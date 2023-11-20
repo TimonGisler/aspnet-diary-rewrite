@@ -5,7 +5,8 @@ using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class GetSpecificEntryTest : IClassFixture<TestApplicationFactory>
+[Collection("Database collection")]
+public class GetSpecificEntryTest
 {
     
     private readonly DiaryApplicationClient _unauthenticatedDiaryApplicationClient;

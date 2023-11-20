@@ -6,7 +6,8 @@ using Xunit;
 
 namespace csharp_diary_rewriteTests_xunit.Features;
 
-public class DeleteEntryTest: IClassFixture<TestApplicationFactory>
+[Collection("Database collection")]
+public class DeleteEntryTest
 {
     
     private readonly DiaryApplicationClient _unauthenticatedDiaryApplicationClient;
