@@ -76,9 +76,15 @@ public class DiaryApplicationClient
         return _httpClient.SendAsync(requestMessage).Result;
     }
     
-    public HttpResponseMessage GetSpecificEntry(object savedEntryId)
+    public HttpResponseMessage GetSpecificEntry(long savedEntryId)
     {
         var requestMessage = createRequestMessage(HttpMethod.Get, $"/api/entry/{savedEntryId}");    
+        return _httpClient.SendAsync(requestMessage).Result;
+    }
+    
+    public HttpResponseMessage UpdateEntry(UpdateEntryCommand updateEntryCommand, long entryToUpdateId)
+    {
+        var requestMessage = createRequestMessage(HttpMethod.Post, $"/api/entry/{entryToUpdateId}", updateEntryCommand);    
         return _httpClient.SendAsync(requestMessage).Result;
     }
 

@@ -85,6 +85,8 @@ public static class ApiRoutesExtensionFunctions
             .RequireAuthorization();
         apiEndpoints.MapGet("/entry/{entryToGetId:int}", GetSpecificEntryHandler.GetSpecificEntry)
             .RequireAuthorization();
+        apiEndpoints.MapPost("/entry/{entryToUpdateId:int}", UpdateEntryHandler.UpdateEntry)
+            .RequireAuthorization();
         
         
         apiEndpoints.MapPost("/register", RegisterUserHandler.RegisterUser);
