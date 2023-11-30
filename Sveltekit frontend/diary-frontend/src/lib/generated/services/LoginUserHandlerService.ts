@@ -2,26 +2,25 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { SaveEntryCommand } from '../models/SaveEntryCommand';
-import type { SaveEntryResponse } from '../models/SaveEntryResponse';
+import type { LoginUserCommand } from '../models/LoginUserCommand';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
-export class AddEntryService {
+export class LoginUserHandlerService {
 
     /**
      * @param requestBody 
-     * @returns SaveEntryResponse Success
+     * @returns string Success
      * @throws ApiError
      */
-    public static postApiEntry(
-requestBody: SaveEntryCommand,
-): CancelablePromise<SaveEntryResponse> {
+    public static postApiLogin(
+requestBody: LoginUserCommand,
+): CancelablePromise<string> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/entry',
+            url: '/api/login',
             body: requestBody,
             mediaType: 'application/json',
         });

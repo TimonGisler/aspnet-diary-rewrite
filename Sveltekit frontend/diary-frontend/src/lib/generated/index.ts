@@ -7,8 +7,17 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { EntryOverview } from './models/EntryOverview';
+export type { LoginUserCommand } from './models/LoginUserCommand';
 export type { RegisterUserCommand } from './models/RegisterUserCommand';
+export type { SaveEntryCommand } from './models/SaveEntryCommand';
+export type { SaveEntryResponse } from './models/SaveEntryResponse';
+export type { UpdateEntryCommand } from './models/UpdateEntryCommand';
 
 export { AddEntryService } from './services/AddEntryService';
-export { CsharpDiaryRewriteService } from './services/CsharpDiaryRewriteService';
+export { DeleteEntryHandlerService } from './services/DeleteEntryHandlerService';
+export { GetEntryOverviewHandlerService } from './services/GetEntryOverviewHandlerService';
+export { GetSpecificEntryHandlerService } from './services/GetSpecificEntryHandlerService';
+export { LoginUserHandlerService } from './services/LoginUserHandlerService';
 export { RegisterUserHandlerService } from './services/RegisterUserHandlerService';
+export { UpdateEntryHandlerService } from './services/UpdateEntryHandlerService';
