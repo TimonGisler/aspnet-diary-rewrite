@@ -1,9 +1,15 @@
 <script lang="ts">
-  import { RegisterUserHandlerService, type RegisterUserCommand } from "$lib/generated";
+  import { RegisterUserHandlerService, type RegisterUserCommand, CancelablePromise } from "$lib/generated";
+  import { goto } from '$app/navigation';
+    import ErrorAlert from "$lib/alerts/ErrorAlert.svelte";
 
   let email = "";
   let password = "";
   let repeatedPassword = ""; //TODO TGIS, add method which checks if passwords are the same if either password changes
+
+  //Flag when toggled error will be shown
+  let errorReason = "";
+  let showError = false;
 
   async function handleRegister() {
     let registerCommand: RegisterUserCommand = {
@@ -11,12 +17,30 @@
       password: password,
     };
 
-    RegisterUserHandlerService.postApiRegister(registerCommand); 
+    let registerResponse: CancelablePromise<unknown>  = RegisterUserHandlerService.postApiRegister(registerCommand);
+    //if user registered successfully redirect to login page else display error message
+    registerResponse.then(() => {
+        goto("/login");
+    }).catch((error) => {
+      console.log("register error")
+      console.log(error.body);
+      //display error message
+      errorReason = error.body;
+      showError = true;
+    });
   }
 
 </script>
 
-<div class="card w-96 bg-base-100 shadow-xl m-auto card-bordered border-blue-600">
+
+
+<!-- If error flag is set display error -->
+{#if showError}
+  <ErrorAlert message={errorReason}/>
+{/if}
+
+
+<div class="card w-full max-w-sm bg-base-100 shadow-xl m-auto card-bordered border-blue-600">
   <div class="card-body">
     <h1 class="text-center text-3xl mb-3">Register</h1>
 
@@ -26,9 +50,11 @@
       placeholder="Email"
       class="input input-bordered input-info w-full max-w-xs"
     />
+
+    <!-- TODO TGIS, change type to password -->
     <input
       bind:value={password}
-      type="text"
+      type="text" 
       placeholder="Password"
       class="input input-bordered input-info w-full max-w-xs"
     />

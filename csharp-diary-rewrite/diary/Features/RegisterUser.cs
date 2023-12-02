@@ -20,7 +20,7 @@ public static class RegisterUserHandler
 
         if (!result.Succeeded)
         {
-            return Results.BadRequest();
+            return Results.BadRequest("Could not create user: " + result.Errors.First().Description);
         }
         
         return Results.Ok();
