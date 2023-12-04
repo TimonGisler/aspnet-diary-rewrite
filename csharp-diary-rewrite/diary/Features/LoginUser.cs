@@ -18,10 +18,10 @@ public record LoginUserCommand(string Email, string Password);
 
 public static class LoginUserHandler
 {
-    public static async Task<string> LoginUser(LoginUserCommand registerUserCommand, UserManager<DiaryUser> userManager)
+    public static async Task<IResult> LoginUser(LoginUserCommand registerUserCommand, UserManager<DiaryUser> userManager)
     {
         var authenticatedUser = await FindUserWithCorrectMailAndPassword(registerUserCommand, userManager);
-        return authenticatedUser != null ? GenerateToken(authenticatedUser.Id, authenticatedUser.Email!) : throw new InvalidCredentialException();
+        return authenticatedUser != null ? Results.Ok(GenerateToken(authenticatedUser.Id, authenticatedUser.Email!)) : Results.BadRequest("Username or password is incorrect.");
     }
 
     private static string GenerateToken(string userId, string userEmail)
@@ -50,9 +50,17 @@ public static class LoginUserHandler
      */
     private static async Task<DiaryUser?> FindUserWithCorrectMailAndPassword(LoginUserCommand registerUserCommand, UserManager<DiaryUser> userManager)
     {
-        var user = await userManager.FindByEmailAsync(registerUserCommand.Email);
-        var userExistsAndPasswordIsCorrect = user != null && await userManager.CheckPasswordAsync(user, registerUserCommand.Password);
+        try
+        {
+            var user = await userManager.FindByEmailAsync(registerUserCommand.Email);
+            var userExistsAndPasswordIsCorrect = user != null && await userManager.CheckPasswordAsync(user, registerUserCommand.Password);
 
-        return userExistsAndPasswordIsCorrect ? user : null;
+            return userExistsAndPasswordIsCorrect ? user : null;
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+
     }
 }

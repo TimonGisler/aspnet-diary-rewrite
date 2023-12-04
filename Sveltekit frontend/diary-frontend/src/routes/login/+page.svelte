@@ -1,21 +1,36 @@
 <script lang="ts">
-  import { SERVER_URL } from "$lib/Constants";
+  import { JWT_TOKEN_LOCAL_STORAGE_KEY, SERVER_URL } from "$lib/Constants";
+    import ErrorAlert from "$lib/alerts/ErrorAlert.svelte";
+    import { LoginUserHandlerService, type LoginUserCommand } from "$lib/generated";
 
   let email = "";
   let password = "";
 
+  let showError = false;
+  let errorReason = "login was not successfull";
+
+  LoginUserHandlerService.postApiLogin
+
   async function handleLogin() {
-    let wasLoginSuccessful = false;
+    let loginCommand: LoginUserCommand = { email: email, password: password }
+    let response = LoginUserHandlerService.postApiLogin(loginCommand);
 
-    let response = await fetch(SERVER_URL + "/login", {
-      method: "POST",
-      headers: { Authorization: "Basic " + btoa(email + ":" + password) },
+    //extract the jwt token from the response and store it in local storage
+    //if the request was not successfull display error message
+    response.then((jwt) => {
+      localStorage.setItem(JWT_TOKEN_LOCAL_STORAGE_KEY, jwt);
+    }).catch((error) => {
+      console.log(error);
+       errorReason = error.body;
+        showError = true;
     });
-
-    wasLoginSuccessful = response.status == 200;
-    console.log("login was: " + wasLoginSuccessful);
   }
 </script>
+
+<!-- If error flag is set display error -->
+{#if showError}
+  <ErrorAlert message={errorReason}/>
+{/if}
 
 <div class="card w-96 bg-base-100 shadow-xl m-auto card-bordered border-blue-600">
   <div class="card-body">

@@ -49,7 +49,7 @@ public class DiaryApplicationClient
     private string LoginUser(LoginUserCommand loginUserCommand)
     {
         //TODO TGIS, it may be more performant if I make this async, but while testing there did not seem to be any difference but this was probably because all those methods were only used once -\_(o.o)_/-
-        return _httpClient.PostAsJsonAsync("/api/login", loginUserCommand).Result.Content.ReadAsStringAsync().Result;
+        return _httpClient.PostAsJsonAsync("/api/login", loginUserCommand).Result.Content.ReadAsAsync<string>().Result;
     }
 
     public HttpResponseMessage SaveEntry(SaveEntryCommand saveEntryCommand)
