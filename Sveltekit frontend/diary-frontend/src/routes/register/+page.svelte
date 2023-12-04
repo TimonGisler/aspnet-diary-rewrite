@@ -22,8 +22,6 @@
     registerResponse.then(() => {
         goto("/login");
     }).catch((error) => {
-      console.log("register error")
-      console.log(error.body);
       //display error message
       errorReason = error.body;
       showError = true;
