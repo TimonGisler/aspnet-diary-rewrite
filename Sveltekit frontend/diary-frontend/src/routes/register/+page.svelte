@@ -1,7 +1,11 @@
 <script lang="ts">
-  import { RegisterUserHandlerService, type RegisterUserCommand, CancelablePromise } from "$lib/generated";
-  import { goto } from '$app/navigation';
-    import ErrorAlert from "$lib/alerts/ErrorAlert.svelte";
+  import {
+    RegisterUserHandlerService,
+    type RegisterUserCommand,
+    CancelablePromise,
+  } from "$lib/generated";
+  import { goto } from "$app/navigation";
+  import FadingErrorAlert from "$lib/alerts/FadingErrorAlert.svelte";
 
   let email = "";
   let password = "";
@@ -17,28 +21,27 @@
       password: password,
     };
 
-    let registerResponse: CancelablePromise<unknown>  = RegisterUserHandlerService.postApiRegister(registerCommand);
+    let registerResponse: CancelablePromise<unknown> =
+      RegisterUserHandlerService.postApiRegister(registerCommand);
     //if user registered successfully redirect to login page else display error message
-    registerResponse.then(() => {
+    registerResponse
+      .then(() => {
         goto("/login");
-    }).catch((error) => {
-      //display error message
-      errorReason = error.body;
-      showError = true;
-    });
+      })
+      .catch((error) => {
+        //display error message
+        errorReason = error.body;
+        showError = true;
+      });
   }
-
 </script>
 
-
-
 <!-- If error flag is set display error -->
-{#if showError}
-  <ErrorAlert message={errorReason}/>
-{/if}
+<FadingErrorAlert message={errorReason}, bind:show={showError} />
 
-
-<div class="card w-full max-w-sm bg-base-100 shadow-xl m-auto card-bordered border-blue-600">
+<div
+  class="card w-full max-w-sm bg-base-100 shadow-xl m-auto card-bordered border-blue-600"
+>
   <div class="card-body">
     <h1 class="text-center text-3xl mb-3">Register</h1>
 
@@ -52,7 +55,7 @@
     <!-- TODO TGIS, change type to password -->
     <input
       bind:value={password}
-      type="text" 
+      type="text"
       placeholder="Password"
       class="input input-bordered input-info w-full max-w-xs"
     />
@@ -63,6 +66,8 @@
       class="input input-bordered input-info w-full max-w-xs"
     />
 
-    <button class="btn btn-success mt-7" on:click={handleRegister}>Register</button>
+    <button class="btn btn-success mt-7" on:click={handleRegister}
+      >Register</button
+    >
   </div>
 </div>
