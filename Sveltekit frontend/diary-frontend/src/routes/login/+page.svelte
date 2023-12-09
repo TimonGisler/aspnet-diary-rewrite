@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { JWT_TOKEN_LOCAL_STORAGE_KEY, SERVER_URL } from "$lib/Constants";
-    import ErrorAlert from "$lib/alerts/ErrorAlert.svelte";
+  import { JWT_TOKEN_LOCAL_STORAGE_KEY } from "$lib/Constants";
+    import FadingErrorAlert from "$lib/alerts/FadingErrorAlert.svelte";
     import { LoginUserHandlerService, type LoginUserCommand } from "$lib/generated";
 
   let email = "";
@@ -22,15 +22,17 @@
     }).catch((error) => {
       console.log(error);
        errorReason = error.body;
-        showError = true;
+       showError = true;
+
+       //hide error message after 2 seconds
+       setTimeout(() => {
+            showError = false;
+        }, 2000); // 2000 millisecond = 2 seconds
     });
   }
 </script>
 
-<!-- If error flag is set display error -->
-{#if showError}
-  <ErrorAlert message={errorReason}/>
-{/if}
+<FadingErrorAlert message={errorReason}, show = {showError}/>
 
 <div class="card w-96 bg-base-100 shadow-xl m-auto card-bordered border-blue-600">
   <div class="card-body">
