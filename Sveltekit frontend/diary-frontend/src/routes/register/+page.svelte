@@ -69,6 +69,6 @@
     <button class="btn btn-success mt-7" on:click={handleRegister}
       >Register</button
     >
-    <a href="/login" class="link link-info font-bold">Login</a>
+    <a href="/login" class="link mt-2">Login</a>
   </div>
 </div>

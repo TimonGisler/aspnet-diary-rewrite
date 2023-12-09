@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
   import { JWT_TOKEN_LOCAL_STORAGE_KEY } from "$lib/Constants";
   import FadingErrorAlert from "$lib/alerts/FadingErrorAlert.svelte";
   import {
@@ -23,6 +24,7 @@
     response
       .then((jwt) => {
         localStorage.setItem(JWT_TOKEN_LOCAL_STORAGE_KEY, jwt);
+        goto("/entry");
       })
       .catch((error) => {
         console.log(error);
@@ -54,7 +56,7 @@
     />
 
     <button class="btn btn-success mt-7" on:click={handleLogin}>Login</button>
-    <a href="/register" class="link link-info font-bold">Register</a>
+    <a href="/register" class="link mt-2">Register</a>
   </div>
 
 
