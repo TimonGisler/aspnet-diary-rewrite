@@ -37,7 +37,7 @@
 </script>
 
 <!-- If error flag is set display error -->
-<FadingErrorAlert message={errorReason}, bind:show={showError} />
+<FadingErrorAlert message="{errorReason}," bind:show={showError} />
 
 <div
   class="card w-full max-w-sm bg-base-100 shadow-xl m-auto card-bordered border-blue-600"
@@ -69,5 +69,6 @@
     <button class="btn btn-success mt-7" on:click={handleRegister}
       >Register</button
     >
+    <a href="/login" class="link link-info font-bold">Login</a>
   </div>
 </div>
