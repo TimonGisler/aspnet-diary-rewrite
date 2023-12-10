@@ -3,6 +3,7 @@
         AddEntryService,
         GetEntryOverviewHandlerService,
         type EntryOverview,
+        GetSpecificEntryHandlerService,
     } from "$lib/generated";
     import { onMount } from "svelte";
 
@@ -15,10 +16,9 @@
     let entryOverviewSidebar: HTMLElement; //needed to hide/show the entry overview in mobile
     let entryContent: HTMLElement; //needed to hide/show the entry overview in mobile
 
-    let entryTitle = "";
-    let entryText = "";
+    let currentEntry;
 
-    //TODO TGIS, implememt overview
+    //TODO TGIS, implememt clicking on overview shows entry
 
     onMount(() => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -51,11 +51,26 @@
         entryContent.classList.remove("hidden");
         entryOverviewSidebar.classList.add("hidden");
     }
+    async function switchToEditMode(){
+        isEditMode = true;
+    }
+
+    async function switchToReadMode(){
+        isEditMode = false;
+    }
+
+    async function showEntry(entryId: number) {
+       let response = GetSpecificEntryHandlerService.getApiEntry(entryId);
+       response.then((response) => {
+              currentEntry = response;
+       });
+    }
 
     async function saveEntry() {
         AddEntryService.postApiEntry({ title: entryTitle, text: entryText })
         .then(() => {
             fetchOverview();
+            switchToReadMode();
         });
     }
 </script>
@@ -64,10 +79,10 @@
     <!-- Entry overview -->
     <!-- both hidden and flex are set because on button click hidden gets removed, and it should then be flex, not block -->
     <div id={entryOverviewSidebarId} class="col-span-1 flex hidden md:flex flex-col p-4">
-        <div id="entries">
+        <div id="entries" class="flex flex-col gap-3">
 
             {#each entryOverviewData as entry (entry.entryId)}
-                <div id="singleEntryOverview">{entry.title}</div>
+                <button id="singleEntryOverview" class=" bg-black p-3" on:click={() => showEntry(entry.entryId)}>{entry.title}</button>
             {/each}
 
         </div>
@@ -106,7 +121,7 @@
         {:else}
             <button
                 class="btn btn-success w-full"
-                on:click={() => (isEditMode = true)}>Edit</button
+                on:click={switchToEditMode}>Edit</button
             >
         {/if}
 
