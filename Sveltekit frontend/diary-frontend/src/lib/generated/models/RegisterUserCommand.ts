@@ -4,6 +4,6 @@
 /* eslint-disable */
 
 export type RegisterUserCommand = {
-    email?: string | null;
-    password?: string | null;
+    email: string;
+    password: string;
 };

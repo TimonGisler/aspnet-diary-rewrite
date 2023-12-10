@@ -1,61 +1,89 @@
 <script lang="ts">
-    import { AddEntryService } from "$lib/generated";
+    import {
+        AddEntryService,
+        GetEntryOverviewHandlerService,
+        type EntryOverview,
+    } from "$lib/generated";
     import { onMount } from "svelte";
 
+    let entryOverviewData: EntryOverview[] = [];
+
     let isEditMode = true; //mode in which the entry is edited/saved
-    let entryOverview: HTMLElement;
-    let entryContent: HTMLElement;
+
+    let entryOverviewSidebarId = "entryOverviewSidebar";
+    let entryContentId = "entryContent";
+    let entryOverviewSidebar: HTMLElement; //needed to hide/show the entry overview in mobile
+    let entryContent: HTMLElement; //needed to hide/show the entry overview in mobile
 
     let entryTitle = "";
     let entryText = "";
 
-    // onmount fetch entryOverview
+    //TODO TGIS, implememt overview
+
     onMount(() => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        entryOverview = document.getElementById("entryOverview")!;
+        entryOverviewSidebar = document.getElementById(entryOverviewSidebarId)!;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        entryContent = document.getElementById("entryContent")!;
+        entryContent = document.getElementById(entryContentId)!;
+
+        fetchOverview();
     });
+
+    async function fetchOverview() {
+        //fetch the overview of the entries
+        let entryOverviewResponse =
+            GetEntryOverviewHandlerService.getApiEntry();
+        entryOverviewResponse.then((response) => {
+            //sort response by id (so that newest entry is on top)
+            response.sort((a, b) => b.entryId - a.entryId);
+            entryOverviewData = response;
+        });
+    }
 
     async function showOverview() {
         //hide the content and show overview
-        entryOverview.classList.remove("hidden");
+        entryOverviewSidebar.classList.remove("hidden");
         entryContent.classList.add("hidden");
     }
 
     async function showContent() {
         //hide the overview and show content
         entryContent.classList.remove("hidden");
-        entryOverview.classList.add("hidden");
+        entryOverviewSidebar.classList.add("hidden");
     }
 
     async function saveEntry() {
-        AddEntryService.postApiEntry({ title: entryTitle, text: entryText });
+        AddEntryService.postApiEntry({ title: entryTitle, text: entryText })
+        .then(() => {
+            fetchOverview();
+        });
     }
 </script>
 
 <div class="w-full flex-1 grid grid-cols-1 md:grid-cols-5 auto-cols-max">
     <!-- Entry overview -->
     <!-- both hidden and flex are set because on button click hidden gets removed, and it should then be flex, not block -->
-    <div id="entryOverview" class="col-span-1 flex hidden md:flex flex-col p-4">
+    <div id={entryOverviewSidebarId} class="col-span-1 flex hidden md:flex flex-col p-4">
         <div id="entries">
-            <div id="singleEntryOverview">Test1</div>
-            <div id="singleEntryOverview">Test2</div>
-            <div id="singleEntryOverview">Test3</div>
-            <div id="singleEntryOverview">Test4</div>
-            <div id="singleEntryOverview">Test5</div>
-            <div id="singleEntryOverview">Test6</div>
+
+            {#each entryOverviewData as entry (entry.entryId)}
+                <div id="singleEntryOverview">{entry.title}</div>
+            {/each}
+
         </div>
 
-        <button class="btn btn-info w-full mt-auto md:hidden" on:click={showContent}>
+        <button
+            class="btn btn-info w-full mt-auto md:hidden"
+            on:click={showContent}
+        >
             Show Content
         </button>
     </div>
 
     <!-- The part where the entry gets displayed (and buttons to save/edit etc) -->
     <div
-        id="entryContent"
-        class="flex md:flex flex-col items-center h-full gap-3 p-4  col-span-4"
+        id={entryContentId}
+        class="flex md:flex flex-col items-center h-full gap-3 p-4 col-span-4"
     >
         <input
             bind:value={entryTitle}

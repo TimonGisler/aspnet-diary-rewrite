@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 export type SaveEntryResponse = {
-    entryId?: number;
-    title?: string | null;
-    text?: string | null;
-    created?: string;
+    entryId: number;
+    title: string;
+    text: string;
+    created: string;
 };

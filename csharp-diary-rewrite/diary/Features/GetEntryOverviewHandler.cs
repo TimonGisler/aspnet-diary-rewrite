@@ -1,11 +1,12 @@
-﻿using System.Security.Claims;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using csharp_diary_rewrite.Model;
 
 namespace csharp_diary_rewrite.Features;
 
 
 
-public record EntryOverview(int EntryId, string? Title, string? Text, DateTimeOffset Created);
+public record EntryOverview([property: Required]int EntryId, string? Title, string? Text, DateTimeOffset Created);
 
 public static class GetEntryOverviewHandler
 {

@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 export type EntryOverview = {
-    entryId?: number;
+    entryId: number;
     title?: string | null;
     text?: string | null;
-    created?: string;
+    created: string;
 };

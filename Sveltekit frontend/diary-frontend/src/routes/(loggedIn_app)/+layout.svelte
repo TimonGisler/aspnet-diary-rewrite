@@ -18,4 +18,8 @@
 
 <Navbar />
 
-<slot />
+<!-- only render after the token was succesfully found and set -->
+{#if OpenAPI.TOKEN}
+  <slot />
+{/if}
+

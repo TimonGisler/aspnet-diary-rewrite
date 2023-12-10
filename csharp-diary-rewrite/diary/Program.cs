@@ -2,6 +2,7 @@ using System.Text;
 using csharp_diary_rewrite.Features;
 using csharp_diary_rewrite.Model;
 using csharp_diary_rewrite.Settings;
+using csharp_diary_rewrite.Swashbuckle;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -53,7 +54,14 @@ public class Program
         });
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2036
+            c.SchemaFilter<RequiredNotNullableSchemaFilter>();
+            c.SupportNonNullableReferenceTypes(); // Sets Nullable flags appropriately.              
+            c.UseAllOfToExtendReferenceSchemas(); // Allows $ref enums to be nullable
+            c.UseAllOfForInheritance();  // Allows $ref objects to be nullable
+        });
 
         var app = builder.Build();
 
@@ -62,8 +70,8 @@ public class Program
 
         app.UseDefaultFiles();
         app.UseStaticFiles();
-        app.UseSwagger(); //http://localhost:5000/swagger/v1/swagger.json
-        app.UseSwaggerUI(); //http://localhost:5000/swagger/index.html
+        app.UseSwagger(); //http://localhost:5281/swagger/v1/swagger.json
+        app.UseSwaggerUI(); //http://localhost:5281/swagger/index.html
 
         app.Run();
     }

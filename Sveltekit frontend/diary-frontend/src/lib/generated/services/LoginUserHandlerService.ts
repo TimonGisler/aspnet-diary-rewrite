@@ -12,12 +12,12 @@ export class LoginUserHandlerService {
 
     /**
      * @param requestBody 
-     * @returns string Success
+     * @returns any Success
      * @throws ApiError
      */
     public static postApiLogin(
 requestBody: LoginUserCommand,
-): CancelablePromise<string> {
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/login',

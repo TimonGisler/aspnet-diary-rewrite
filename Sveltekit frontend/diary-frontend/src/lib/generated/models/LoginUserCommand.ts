@@ -4,6 +4,6 @@
 /* eslint-disable */
 
 export type LoginUserCommand = {
-    email?: string | null;
-    password?: string | null;
+    email: string;
+    password: string;
 };

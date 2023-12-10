@@ -4,6 +4,6 @@
 /* eslint-disable */
 
 export type SaveEntryCommand = {
-    title?: string | null;
-    text?: string | null;
+    title: string;
+    text: string;
 };
