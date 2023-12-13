@@ -7,7 +7,9 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { EntryData } from './models/EntryData';
 export type { EntryOverview } from './models/EntryOverview';
+export type { ErrorReason } from './models/ErrorReason';
 export type { LoginUserCommand } from './models/LoginUserCommand';
 export type { RegisterUserCommand } from './models/RegisterUserCommand';
 export type { SaveEntryCommand } from './models/SaveEntryCommand';

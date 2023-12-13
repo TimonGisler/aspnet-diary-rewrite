@@ -9,7 +9,10 @@
     "test": "playwright test",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "generateApiClient": "npm run generateOpenapiJson && npm run createClientFromOpenapiSpec",
+    "generateOpenapiJson": "mkdir todoDelete && cd ..\\..\\csharp-diary-rewrite && dotnet swagger tofile --output ..\\sveltekit-frontend\\diary-frontend\\todoDelete\\spec.json diary\\bin\\Debug\\net7.0\\csharp-diary-rewrite.dll v1",
+    "createClientFromOpenapiSpec": "cd todoDelete && npm install openapi-typescript-codegen --save-dev && npx openapi --input .\\spec.json --output ..\\src\\lib\\generated && cd .. && rmdir todoDelete /s /q"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
@@ -22,6 +25,7 @@
     "daisyui": "^3.5.1",
     "eslint": "^8.28.0",
     "eslint-plugin-svelte": "^2.30.0",
+    "openapi-typescript-codegen": "^0.25.0",
     "postcss": "^8.4.24",
     "postcss-load-config": "^4.0.1",
     "svelte": "^4.0.5",

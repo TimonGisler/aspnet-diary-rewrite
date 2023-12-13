@@ -51,24 +51,26 @@
         entryContent.classList.remove("hidden");
         entryOverviewSidebar.classList.add("hidden");
     }
-    async function switchToEditMode(){
+    async function switchToEditMode() {
         isEditMode = true;
     }
 
-    async function switchToReadMode(){
+    async function switchToReadMode() {
         isEditMode = false;
     }
 
     async function showEntry(entryId: number) {
-       let response = GetSpecificEntryHandlerService.getApiEntry(entryId);
-       response.then((response) => {
-              currentEntry = response;
-       });
+        let response = GetSpecificEntryHandlerService.getApiEntry(entryId);
+        response.then((response) => {
+            currentEntry = response;
+        });
     }
 
     async function saveEntry() {
-        AddEntryService.postApiEntry({ title: entryTitle, text: entryText })
-        .then(() => {
+        AddEntryService.postApiEntry({
+            title: entryTitle,
+            text: entryText,
+        }).then(() => {
             fetchOverview();
             switchToReadMode();
         });
@@ -78,13 +80,19 @@
 <div class="w-full flex-1 grid grid-cols-1 md:grid-cols-5 auto-cols-max">
     <!-- Entry overview -->
     <!-- both hidden and flex are set because on button click hidden gets removed, and it should then be flex, not block -->
-    <div id={entryOverviewSidebarId} class="col-span-1 flex hidden md:flex flex-col p-4">
+    <div
+        id={entryOverviewSidebarId}
+        class="col-span-1 flex hidden md:flex flex-col p-4"
+    >
         <div id="entries" class="flex flex-col gap-3">
-
             {#each entryOverviewData as entry (entry.entryId)}
-                <button id="singleEntryOverview" class=" bg-black p-3" on:click={() => showEntry(entry.entryId)}>{entry.title}</button>
+                <button
+                    id="singleEntryOverview"
+                    class=" bg-black p-3"
+                    on:click={() => showEntry(entry.entryId)}
+                    >{entry.title}</button
+                >
             {/each}
-
         </div>
 
         <button
@@ -119,9 +127,8 @@
                 >Save</button
             >
         {:else}
-            <button
-                class="btn btn-success w-full"
-                on:click={switchToEditMode}>Edit</button
+            <button class="btn btn-success w-full" on:click={switchToEditMode}
+                >Edit</button
             >
         {/if}
 

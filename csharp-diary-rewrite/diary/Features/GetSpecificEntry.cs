@@ -6,9 +6,11 @@ namespace csharp_diary_rewrite.Features;
 
 public record EntryData(int Id, string? Title, string? Text, DateTimeOffset Created);
 
+public record ErrorReason(string Reason); //TODO TGIS, move this to a central place to reuse
+
 public static class GetSpecificEntryHandler
 {
-    public static IResult GetSpecificEntry(DiaryDbContext dbContext, ClaimsPrincipal user, int entryToGetId)
+    public static Results<Ok<EntryData>, NotFound<ErrorReason>> GetSpecificEntry(DiaryDbContext dbContext, ClaimsPrincipal user, int entryToGetId)
     {
         var userId = user.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -16,6 +18,5 @@ public static class GetSpecificEntryHandler
         var entry = dbContext.Entries
             .SingleOrDefault(e => e.Id == entryToGetId && e.Creator.Id == userId);
         
-        return entry == null ? Results.NotFound("this entry does not exist") : Results.Ok(new EntryData(entry.Id, entry.Title, entry.Text, entry.Created));
-    }
+        return entry == null ? TypedResults.NotFound(new ErrorReason("this entry does not exist")) : TypedResults.Ok(new EntryData(entry.Id, entry.Title, entry.Text, entry.Created));      }
 }
