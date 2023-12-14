@@ -117,15 +117,15 @@
     }
 </script>
 
-<div class="w-full flex-1 grid grid-cols-1 md:grid-cols-5 auto-cols-max">
+<div class="w-full  grid grid-cols-1 md:grid-cols-5 auto-cols-max overflow-hidden">
     <!-- Entry overview -->
     <!-- both hidden and flex are set because on button click hidden gets removed, and it should then be flex, not block -->
     <div
         id={entryOverviewSidebarId}
-        class="col-span-1 flex hidden md:flex flex-col p-4"
+        class="col-span-1 flex hidden md:flex flex-col p-4 overflow-y-auto max-h-full mb-10"
     >
         <div id="entries" class="flex flex-col gap-3">
-            <button id="newEntryButton" class="btn btn-success" on:click={newEntryClicked}>+ New Entry</button>
+            <button id="newEntryButton" class="btn btn-success sticky top-0" on:click={newEntryClicked}>+ New Entry</button>
 
             {#each entryOverviewData as entry (entry.entryId)}
                 <button
