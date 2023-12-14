@@ -5,7 +5,7 @@
 
 export type SaveEntryResponse = {
     entryId: number;
-    title: string;
-    text: string;
+    title?: string | null;
+    text?: string | null;
     created: string;
 };

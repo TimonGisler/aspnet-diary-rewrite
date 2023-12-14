@@ -4,6 +4,7 @@
         GetEntryOverviewHandlerService,
         type EntryOverview,
         GetSpecificEntryHandlerService,
+        type EntryData,
     } from "$lib/generated";
     import { onMount } from "svelte";
 
@@ -16,9 +17,12 @@
     let entryOverviewSidebar: HTMLElement; //needed to hide/show the entry overview in mobile
     let entryContent: HTMLElement; //needed to hide/show the entry overview in mobile
 
-    let currentEntry;
-
-    //TODO TGIS, implememt clicking on overview shows entry
+    let currentEntry: EntryData = {
+        id: -1,
+        title: "",
+        text: "",
+        created:""
+    };
 
     onMount(() => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -64,12 +68,14 @@
         response.then((response) => {
             currentEntry = response;
         });
+
+        switchToReadMode();
     }
 
     async function saveEntry() {
         AddEntryService.postApiEntry({
-            title: entryTitle,
-            text: entryText,
+            title: currentEntry.title,
+            text: currentEntry.text,
         }).then(() => {
             fetchOverview();
             switchToReadMode();
@@ -109,14 +115,14 @@
         class="flex md:flex flex-col items-center h-full gap-3 p-4 col-span-4"
     >
         <input
-            bind:value={entryTitle}
+            bind:value={currentEntry.title}
             type="text"
             placeholder="Title"
             class="input input-bordered w-full"
             disabled={!isEditMode}
         />
         <textarea
-            bind:value={entryText}
+            bind:value={currentEntry.text}
             class="textarea textarea-bordered resize-none w-full h-4/5"
             placeholder="Text"
             disabled={!isEditMode}

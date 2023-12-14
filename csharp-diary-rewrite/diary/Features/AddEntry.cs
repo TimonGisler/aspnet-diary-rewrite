@@ -4,8 +4,8 @@ using csharp_diary_rewrite.Model;
 
 namespace csharp_diary_rewrite.Features
 {
-    public record SaveEntryCommand(string Title, string Text);
-    public record SaveEntryResponse(int EntryId, string Title, string Text, DateTimeOffset Created);
+    public record SaveEntryCommand(string? Title, string? Text);
+    public record SaveEntryResponse(int EntryId, string? Title, string? Text, DateTimeOffset Created);
 
     public class AddEntry
     {
