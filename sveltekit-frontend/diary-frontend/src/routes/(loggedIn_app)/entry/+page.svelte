@@ -5,6 +5,7 @@
         type EntryOverview,
         GetSpecificEntryHandlerService,
         type EntryData,
+        UpdateEntryHandlerService,
     } from "$lib/generated";
     import { onMount } from "svelte";
 
@@ -21,8 +22,10 @@
         id: -1,
         title: "",
         text: "",
-        created:""
+        created: "",
     };
+
+    //TODO TGIS, implement editing of entries
 
     onMount(() => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -73,10 +76,33 @@
     }
 
     async function saveEntry() {
-        AddEntryService.postApiEntry({
+        //decide if it is an update or a new entry
+        if (currentEntry.id > 0) {
+            updateEntry();
+        } else {
+            addEntry();
+        }
+    }
+
+    async function addEntry() {
+        let addResponse = AddEntryService.postApiEntry({
             title: currentEntry.title,
             text: currentEntry.text,
-        }).then(() => {
+        });
+
+        addResponse.then(() => {
+            fetchOverview();
+            switchToReadMode();
+        });
+    }
+
+    async function updateEntry() {
+        let updateResponse = UpdateEntryHandlerService.postApiEntry(currentEntry.id, {
+            newTitle: currentEntry.title,
+            newText: currentEntry.text,
+        });
+
+        updateResponse.then(() => {
             fetchOverview();
             switchToReadMode();
         });
