@@ -18,14 +18,17 @@
     let entryOverviewSidebar: HTMLElement; //needed to hide/show the entry overview in mobile
     let entryContent: HTMLElement; //needed to hide/show the entry overview in mobile
 
-    let currentEntry: EntryData = {
+    //how a new entry looks like, this data will be displayed when the user clicks on "new entry"
+    // and if the user goes for the first time on this page
+    const newEntry: EntryData = {
         id: -1,
         title: "",
         text: "",
         created: "",
     };
 
-    //TODO TGIS, implement editing of entries
+    //the entry that is currently displayed
+    let currentEntry: EntryData = structuredClone(newEntry);
 
     onMount(() => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -107,6 +110,11 @@
             switchToReadMode();
         });
     }
+
+    async function newEntryClicked() {
+        currentEntry = structuredClone(newEntry);
+        switchToEditMode();
+    }
 </script>
 
 <div class="w-full flex-1 grid grid-cols-1 md:grid-cols-5 auto-cols-max">
@@ -117,6 +125,8 @@
         class="col-span-1 flex hidden md:flex flex-col p-4"
     >
         <div id="entries" class="flex flex-col gap-3">
+            <button id="newEntryButton" class="btn btn-success" on:click={newEntryClicked}>+ New Entry</button>
+
             {#each entryOverviewData as entry (entry.entryId)}
                 <button
                     id="singleEntryOverview"
