@@ -19,6 +19,13 @@
     let entryOverviewSidebar: HTMLElement; //needed to hide/show the entry overview in mobile
     let entryContent: HTMLElement; //needed to hide/show the entry overview in mobile
 
+    //TODO TGIS, make it visually more appealing (especiall new entry boxes)
+    //TODO TGIS, add logout button
+    //TODO TGIS, clean up svelte sites (home page not necessary probably)
+    //TODO TGIS, add docker compose file to spin it up fast
+    //TODO TGIS; finished : D
+    //TODO TGIS, highlight current entry in overview
+
     //how a new entry looks like, this data will be displayed when the user clicks on "new entry"
     // and if the user goes for the first time on this page
     const newEntry: EntryData = {
@@ -27,9 +34,6 @@
         text: "",
         created: "",
     };
-
-        //TODO TGIS add delete button/logic
-
 
     //the entry that is currently displayed
     let currentEntry: EntryData = structuredClone(newEntry);
@@ -142,7 +146,7 @@
             {#each entryOverviewData as entry (entry.entryId)}
                 <button
                     id="singleEntryOverview"
-                    class=" bg-black p-3"
+                    class=" bg-black p-3 {entry.entryId === currentEntry.id ? 'bg-gray-700' : ''}"
                     on:click={() => showEntry(entry.entryId)}
                     >{entry.title}</button
                 >
