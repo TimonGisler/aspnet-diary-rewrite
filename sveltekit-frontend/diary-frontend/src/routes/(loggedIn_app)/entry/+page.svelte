@@ -123,10 +123,6 @@
         fetchOverview();
     }
     
-
-    //TODO TGIS, make it visually more appealing (especiall new entry boxes)
-    //TODO TGIS, add logout button
-    //TODO TGIS, clean up svelte sites (home page not necessary probably)
     //TODO TGIS, add docker compose file to spin it up fast
     //TODO TGIS; finished : D
 
