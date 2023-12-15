@@ -27,6 +27,9 @@
         created: "",
     };
 
+        //TODO TGIS add delete button/logic
+
+
     //the entry that is currently displayed
     let currentEntry: EntryData = structuredClone(newEntry);
 
@@ -117,7 +120,7 @@
     }
 </script>
 
-<div class="w-full  grid grid-cols-1 md:grid-cols-5 auto-cols-max overflow-hidden">
+<div class="w-full h-full grid grid-cols-1 md:grid-cols-5 auto-cols-max overflow-hidden">
     <!-- Entry overview -->
     <!-- both hidden and flex are set because on button click hidden gets removed, and it should then be flex, not block -->
     <div
