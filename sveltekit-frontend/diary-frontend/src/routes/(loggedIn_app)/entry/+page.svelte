@@ -6,6 +6,7 @@
         GetSpecificEntryHandlerService,
         type EntryData,
         UpdateEntryHandlerService,
+        DeleteEntryHandlerService,
     } from "$lib/generated";
     import { onMount } from "svelte";
 
@@ -118,6 +119,13 @@
         currentEntry = structuredClone(newEntry);
         switchToEditMode();
     }
+
+    async function deleteEntry() {
+        await DeleteEntryHandlerService.deleteApiEntry(currentEntry.id);
+        currentEntry = structuredClone(newEntry);
+        fetchOverview();
+    }
+    
 </script>
 
 <div class="w-full h-full grid grid-cols-1 md:grid-cols-5 auto-cols-max overflow-hidden">
@@ -176,6 +184,10 @@
             <button class="btn btn-success w-full" on:click={switchToEditMode}
                 >Edit</button
             >
+
+            <button class="btn btn-error w-full" on:click={deleteEntry}
+            >Delete</button
+        >
         {/if}
 
         <button class="btn btn-info w-full md:hidden" on:click={showOverview}>
