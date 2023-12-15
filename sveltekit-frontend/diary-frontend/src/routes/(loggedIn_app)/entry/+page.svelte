@@ -19,13 +19,6 @@
     let entryOverviewSidebar: HTMLElement; //needed to hide/show the entry overview in mobile
     let entryContent: HTMLElement; //needed to hide/show the entry overview in mobile
 
-    //TODO TGIS, make it visually more appealing (especiall new entry boxes)
-    //TODO TGIS, add logout button
-    //TODO TGIS, clean up svelte sites (home page not necessary probably)
-    //TODO TGIS, add docker compose file to spin it up fast
-    //TODO TGIS; finished : D
-    //TODO TGIS, highlight current entry in overview
-
     //how a new entry looks like, this data will be displayed when the user clicks on "new entry"
     // and if the user goes for the first time on this page
     const newEntry: EntryData = {
@@ -130,6 +123,14 @@
         fetchOverview();
     }
     
+
+    //TODO TGIS, make it visually more appealing (especiall new entry boxes)
+    //TODO TGIS, add logout button
+    //TODO TGIS, clean up svelte sites (home page not necessary probably)
+    //TODO TGIS, add docker compose file to spin it up fast
+    //TODO TGIS; finished : D
+
+
 </script>
 
 <div class="w-full h-full grid grid-cols-1 md:grid-cols-5 auto-cols-max overflow-hidden">
@@ -139,14 +140,14 @@
         id={entryOverviewSidebarId}
         class="col-span-1 flex hidden md:flex flex-col p-4 pt-0 pb-0 mt-4 overflow-y-auto max-h-full mb-10"
     >           
-     <button id="newEntryButton" class="btn btn-success sticky top-0 mb-3" on:click={newEntryClicked}>+ New Entry</button>
+     <button id="newEntryButton" class="btn btn-success sticky top-0 mb-3 z-10" on:click={newEntryClicked}>+ New Entry</button>
 
         <div id="entries" class="flex flex-col gap-3">
 
             {#each entryOverviewData as entry (entry.entryId)}
                 <button
                     id="singleEntryOverview"
-                    class=" bg-black p-3 {entry.entryId === currentEntry.id ? 'bg-gray-700' : ''}"
+                    class="p-3 card bg-base-100 {entry.entryId === currentEntry.id ? 'bg-gray-700' : ''}"
                     on:click={() => showEntry(entry.entryId)}
                     >{entry.title}</button
                 >
