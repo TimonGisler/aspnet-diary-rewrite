@@ -9,13 +9,20 @@
 
   let email = "";
   let password = "";
-  let repeatedPassword = ""; //TODO TGIS, add method which checks if passwords are the same if either password changes
+  let repeatedPassword = "";
 
   //Flag when toggled error will be shown
   let errorReason = "";
   let showError = false;
 
   async function handleRegister() {
+
+    if (password !== repeatedPassword) {
+      errorReason = "passwords do not match";
+      showError = true;
+      return;
+    }
+
     let registerCommand: RegisterUserCommand = {
       email: email,
       password: password,
@@ -52,16 +59,15 @@
       class="input input-bordered input-info w-full max-w-xs"
     />
 
-    <!-- TODO TGIS, change type to password -->
     <input
       bind:value={password}
-      type="text"
+      type="password"
       placeholder="Password"
       class="input input-bordered input-info w-full max-w-xs"
     />
     <input
       bind:value={repeatedPassword}
-      type="text"
+      type="password"
       placeholder="Repeat Password"
       class="input input-bordered input-info w-full max-w-xs"
     />

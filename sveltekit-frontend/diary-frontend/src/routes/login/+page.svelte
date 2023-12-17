@@ -50,7 +50,7 @@
     />
     <input
       bind:value={password}
-      type="text"
+      type="password"
       placeholder="Password"
       class="input input-bordered input-info w-full max-w-xs"
     />
