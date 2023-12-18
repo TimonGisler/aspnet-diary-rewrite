@@ -17,7 +17,16 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddDbContext<DiaryDbContext>(options =>
-            options.UseNpgsql("Host=localhost:5433;Database=postgres;Username=postgres;Password=Hallo123_"));
+        {
+            var host = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
+            var port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5433";
+            var database = Environment.GetEnvironmentVariable("DATABASE_NAME") ?? "postgres";
+            var username = Environment.GetEnvironmentVariable("DATABASE_USER") ?? "postgres";
+            var password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "Hallo123_";
+            var connectionString = $"Host={host};Port={port};Database={database};Username={username};Password={password}";
+
+            options.UseNpgsql(connectionString);
+        });
 
         //add jwt authentication
         builder.Services
@@ -65,6 +74,14 @@ public class Program
 
         var app = builder.Build();
 
+        //migrate db
+        //Migrate db
+        using (var scope = app.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<DiaryDbContext>();
+            db.Database.Migrate();
+        }
+        
         app.MapGroup("/api") //create a group
             .MapApiRoutes(); //map all the routes
 

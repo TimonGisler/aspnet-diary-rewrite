@@ -32,7 +32,7 @@ public class AddEntryTests
         
         Assert.True(response.StatusCode == HttpStatusCode.Unauthorized);
     }
-
+    
     [Fact]
     public void logged_in_user_can_save_entry()
     {
