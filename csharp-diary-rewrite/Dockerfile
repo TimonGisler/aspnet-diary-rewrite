@@ -15,7 +15,7 @@ COPY diary/ diary/
 FROM build AS publish
 WORKDIR /source/diary
 # for some weird reason have to restore again, because otherewise "Package Microsoft.EntityFrameworkCore.Analyzers, version 7.0.10 was not found."
-RUN dotnet restore
+# RUN dotnet restore
 RUN dotnet publish --no-restore -o /diary
 
 # final stage/image
