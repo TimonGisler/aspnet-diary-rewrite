@@ -21,15 +21,24 @@ jobs:
     - 
       name: checkout newly pushed commit
       uses: actions/checkout@v4 # checkout my repo "By default, this action will check-out to the SHA for that workflow’s event (such as push and pull_request)." https://stackoverflow.com/questions/76938677/whats-the-purpose-of-actions-checkoutv3-when-the-repository-is-already-checke
-    - run: ls
     -
       name: build docker image
       run:  docker build -t aspnet-diary:${GITHUB_SHA} -f csharp-diary-rewrite/Dockerfile csharp-diary-rewrite
 
-    - name: save image as tar # save image as tar so that i can scp it over to vps https://stackoverflow.com/q/23935141/15015069
+    - 
+      name: save image as tar # save image as tar so that i can scp it over to vps https://stackoverflow.com/q/23935141/15015069
       run:  docker save aspnet-diary:${GITHUB_SHA} > image.tar
+    - 
+      name: Prepare docker-compose file (replace placeholders)
+      # uses sed to replace the placeholders in the docker-compose.yml file with the actual image name and tag
+      # s# --> s = start of sed command, # = delimiter (can be any char, but # is common), g = global (replace all occurences)
+      # sed is structured like this: s (start) # (some delimiter) <search pattern> (what to search for) # <replace pattern> (what to replace it with) # g (global, replace all occurences
+      run: |
+        sed -i "s#<insertImageName>#aspnet-diary#g" ./docker-compose.yml
+        sed -i "s#<insertImageTag>#${GITHUB_SHA}#g" ./docker-compose.yml
 
-    - name: copy image and docker-compose.yml to vps
+    - 
+      name: copy image and docker-compose.yml to vps
       uses: appleboy/scp-action@v0.1.7 # https://github.com/appleboy/scp-action#usage
       with:
         host: ${{ secrets.HETZNER_VPS_IP }}
@@ -46,17 +55,12 @@ jobs:
         username: ${{ secrets.HETZNER_VPS_SSH_USER }}
         key: ${{ secrets.HETZNER_VPS_SSH_PRIVATE_KEY }}
         script: | # pipe char means text below is a text block and new lines also belong to it. https://stackoverflow.com/a/61661091/15015069
-            docker load < docker-images-from-workflow/image.tar
+            cd ~/docker-images-from-workflow
+            docker load < image.tar
             docker stop aspnet-diary || true
             docker rm aspnet-diary || true
-            docker run -d --name YOUR_CONTAINER_NAME YOUR_IMAGE_NAME:${GITHUB_SHA}
+            pwd 
+            ls
+            docker compose up
             rm ~/image.tar
-
-      
-# 1. Establish connection to vps and download test iamge
-# docker pull nginxdemos/hello
-# docker run -d -p 80:80 nginxdemos/hello
-# HETZNER_VPS_IP
-# HETZNER_VPS_SSH_PRIVATE_KEY
-# HETZNER_VPS_SSH_USER
 
