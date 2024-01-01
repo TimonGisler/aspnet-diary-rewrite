@@ -15,7 +15,7 @@ COPY diary/ diary/
 FROM build AS publish
 WORKDIR /source/diary
 # for some weird reason have to restore again, because otherewise "Package Microsoft.EntityFrameworkCore.Analyzers, version 7.0.10 was not found."
-# RUN dotnet restore
+# RUN dotnet restore <-- for some reason i cannot run this command on arm64 it leads to an error MSB3883: Unexpected exception:  [/source/diary/csharp-diary-rewrite.csproj] #15 76.30 /usr/share/dotnet/sdk/7.0.404/Roslyn/Microsoft.CSharp.Core.targets(80,5): error : Object reference not set to an instance of an object. [/source/diary/csharp-diary-rewrite.csproj]
 RUN dotnet publish --no-restore -o /diary
 
 # final stage/image

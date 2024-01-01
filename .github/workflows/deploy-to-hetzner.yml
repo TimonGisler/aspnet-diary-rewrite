@@ -74,6 +74,6 @@ jobs:
             docker rm aspnet-diary || true
             pwd 
             ls
-            docker compose up
+            docker compose up -d
             rm image.tar
 
