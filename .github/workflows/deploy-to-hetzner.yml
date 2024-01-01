@@ -15,17 +15,41 @@ jobs:
   build_and_deploy_to_hetzner: # the job id
     name: build and deploy to hetzner # the job name (displayed in ui)
     runs-on: ubuntu-latest
+    
     # define steps to execute https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsteps
     steps:
-    - name: build image
-      run: echo todo
-    - name: deploy to vps --> run all ssh commands needed # https://github.com/appleboy/ssh-action#using-private-key
-      uses: appleboy/ssh-action@v1.0.2
+    - 
+      name: checkout newly pushed commit
+      uses: actions/checkout@v4 # checkout my repo "By default, this action will check-out to the SHA for that workflow’s event (such as push and pull_request)." https://stackoverflow.com/questions/76938677/whats-the-purpose-of-actions-checkoutv3-when-the-repository-is-already-checke
+    -
+      name: build docker image
+      run:  docker build -t aspnet-diary:${GITHUB_SHA} .
+
+    - name: save image as tar # save image as tar so that i can scp it over to vps https://stackoverflow.com/q/23935141/15015069
+      run:  docker save aspnet-diary:${GITHUB_SHA} > image.tar
+
+    - name: copy image and docker-compose.yml to vps
+      uses: appleboy/scp-action@v0.1.7 # https://github.com/appleboy/scp-action#usage
       with:
         host: ${{ secrets.HETZNER_VPS_IP }}
         username: ${{ secrets.HETZNER_VPS_SSH_USER }}
         key: ${{ secrets.HETZNER_VPS_SSH_PRIVATE_KEY }}
-        script: docker run -d -p 80:80 nginxdemos/hello
+        source: ./image.tar, docker-compose.yml
+        target: ~/docker-images-from-workflow
+
+    - 
+      name: Load and run Docker image on server 
+      uses: appleboy/ssh-action@v1.0.2 # https://github.com/appleboy/ssh-action#using-private-key
+      with:
+        host: ${{ secrets.HETZNER_VPS_IP }}
+        username: ${{ secrets.HETZNER_VPS_SSH_USER }}
+        key: ${{ secrets.HETZNER_VPS_SSH_PRIVATE_KEY }}
+        script: | # pipe char means text below is a text block and new lines also belong to it. https://stackoverflow.com/a/61661091/15015069
+            docker load < docker-images-from-workflow/image.tar
+            docker stop aspnet-diary || true
+            docker rm aspnet-diary || true
+            docker run -d --name YOUR_CONTAINER_NAME YOUR_IMAGE_NAME:${GITHUB_SHA}
+            rm ~/image.tar
 
       
 # 1. Establish connection to vps and download test iamge
