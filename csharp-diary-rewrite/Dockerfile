@@ -1,4 +1,4 @@
-# mainly from: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/docker/building-net-docker-images?view=aspnetcore-8.0#the-dockerfile --> pulled example and looked at complexapp
+# mainly from: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/docker/building-net-docker-images?view=aspnetcore-8.0#download-the-sample-app --> pulled example and looked at complexapp
 # This uses multi stage builds https://docs.docker.com/build/building/multi-stage/
 # https://hub.docker.com/_/microsoft-dotnet
 
