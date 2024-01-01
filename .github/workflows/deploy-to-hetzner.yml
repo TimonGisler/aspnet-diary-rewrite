@@ -38,13 +38,17 @@ jobs:
         sed -i "s#<insertImageTag>#${GITHUB_SHA}#g" ./docker-compose.yml
 
     - 
-      name: copy image and docker-compose.yml to vps
+      name: prepare .env file (replace placeholders)
+      run: sed -i "s#<insertDbPassword>#${{ secrets.POSTGRES_DB_PW }}#g" ./.env
+
+    - 
+      name: copy image, docker-compose.yml and .env to vps
       uses: appleboy/scp-action@v0.1.7 # https://github.com/appleboy/scp-action#usage
       with:
         host: ${{ secrets.HETZNER_VPS_IP }}
         username: ${{ secrets.HETZNER_VPS_SSH_USER }}
         key: ${{ secrets.HETZNER_VPS_SSH_PRIVATE_KEY }}
-        source: ./image.tar, docker-compose.yml
+        source: ./image.tar, docker-compose.yml, .env
         target: ~/docker-images-from-workflow
 
     - 
@@ -62,5 +66,5 @@ jobs:
             pwd 
             ls
             docker compose up
-            rm ~/image.tar
+            rm image.tar
 
