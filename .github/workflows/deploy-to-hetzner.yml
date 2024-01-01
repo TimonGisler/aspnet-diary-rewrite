@@ -75,5 +75,4 @@ jobs:
             pwd 
             ls
             docker compose up -d
-            rm image.tar
 
