@@ -1,18 +1,37 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+name: Deploy to hetzner # name of this workflow
+run-name: ${{ github.actor }} is deploying to hetzner # name of this specific workflow run, can include infos like who started it
+
+# specify when this workflow runs
+# use event with filters --> https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#using-filters
+# only run the job if push on certain branch
+on:
+  push:
+      branches:
+      - main
+      - add_cicd_script
+
+# Specify what runs (jobs) https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobs
 jobs:
-  Explore-GitHub-Actions:
+  build_and_deploy_to_hetzner: # the job id
+    name: build and deploy to hetzner # the job name (displayed in ui)
     runs-on: ubuntu-latest
+    # define steps to execute https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsteps
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+    - name: build image
+      run: echo todo
+    - name: deploy to vps --> run all ssh commands needed # https://github.com/appleboy/ssh-action#using-private-key
+      uses: appleboy/ssh-action@v1.0.2
+      with:
+        host: ${{ secrets.HETZNER_VPS_IP }}
+        username: ${{ secrets.HETZNER_VPS_SSH_USER }}
+        key: ${{ secrets.HETZNER_VPS_SSH_PRIVATE_KEY }}
+        script: docker run -d -p 80:80 nginxdemos/hello
+
+      
+# 1. Establish connection to vps and download test iamge
+# docker pull nginxdemos/hello
+# docker run -d -p 80:80 nginxdemos/hello
+# HETZNER_VPS_IP
+# HETZNER_VPS_SSH_PRIVATE_KEY
+# HETZNER_VPS_SSH_USER
+
