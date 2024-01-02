@@ -22,18 +22,18 @@ jobs:
       uses: actions/checkout@v4 # checkout my repo "By default, this action will check-out to the SHA for that workflow’s event (such as push and pull_request)." https://stackoverflow.com/a/76938699/15015069
     -
       name: build docker image
-      run:  docker build --platform linux/arm64 -t aspnet-diary:${GITHUB_SHA} -f csharp-diary-rewrite/Dockerfile csharp-diary-rewrite --load
+      run:  docker build --platform linux/arm64 -t ${{ vars.IMAGE_NAME }}:${{ github.sha }} -f csharp-diary-rewrite/Dockerfile csharp-diary-rewrite
     - 
       name: save image as tar # save image as tar so that i can scp it over to vps https://stackoverflow.com/q/23935141/15015069
-      run:  docker save aspnet-diary:${GITHUB_SHA} > image.tar
+      run:  docker save ${{ vars.IMAGE_NAME }}:${{ github.sha }} > ${{ vars.IMAGE_TAR_NAME }}
     - 
       name: Prepare docker-compose file (replace placeholders)
       # uses sed to replace the placeholders in the docker-compose.yml file with the actual image name and tag
       # s# --> s = start of sed command, # = delimiter (can be any char, but # is common), g = global (replace all occurences)
       # sed is structured like this: s (start) # (some delimiter) <search pattern> (what to search for) # <replace pattern> (what to replace it with) # g (global, replace all occurences
       run: |
-        sed -i "s#<insertImageName>#aspnet-diary#g" ./docker-compose.yml
-        sed -i "s#<insertImageTag>#${GITHUB_SHA}#g" ./docker-compose.yml
+        sed -i "s#<insertImageName>#${{ vars.IMAGE_NAME }}#g" ./docker-compose.yml
+        sed -i "s#<insertImageTag>#${{ github.sha }}#g" ./docker-compose.yml
 
     - 
       name: prepare .env file (replace placeholders)
@@ -46,8 +46,8 @@ jobs:
         host: ${{ secrets.HETZNER_VPS_IP }}
         username: ${{ secrets.HETZNER_VPS_SSH_USER }}
         key: ${{ secrets.HETZNER_VPS_SSH_PRIVATE_KEY }}
-        source: ./image.tar, docker-compose.yml, .env
-        target: ~/docker-images-from-workflow
+        source: ${{ vars.IMAGE_TAR_NAME }}, docker-compose.yml, .env
+        target: ${{ vars.IMAGE_DIRECTORY_PATH }}
 
     - 
       name: Load and run Docker image on server 
@@ -57,11 +57,11 @@ jobs:
         username: ${{ secrets.HETZNER_VPS_SSH_USER }}
         key: ${{ secrets.HETZNER_VPS_SSH_PRIVATE_KEY }}
         script: | # pipe char means text below is a text block and new lines also belong to it. https://stackoverflow.com/a/61661091/15015069
-            cd ~/docker-images-from-workflow
-            docker load < image.tar
-            docker stop aspnet-diary || true
-            docker rm aspnet-diary || true
-            pwd 
-            ls
+            cd ${{ vars.IMAGE_DIRECTORY_PATH }}
+            docker load < ${{ vars.IMAGE_TAR_NAME }}
+            sha256sum image.tar
+            docker stop ${{ vars.IMAGE_NAME }} || true
+            docker rm ${{ vars.IMAGE_NAME }} || true
             docker compose up -d
+            rm ${{ vars.IMAGE_TAR_NAME }}
 
