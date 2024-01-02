@@ -7,8 +7,7 @@ run-name: ${{ github.actor }} is deploying to hetzner # name of this specific wo
 on:
   push:
       branches:
-      - main
-      - add_cicd_script
+      - master
 
 # Specify what runs (jobs) https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobs
 jobs:
