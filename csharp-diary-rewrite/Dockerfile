@@ -4,21 +4,26 @@
 
 #!!!!!!! This will create a docker image of my project, but it will not automatically copy the newest version of svelte
 #!!!!!!! I have to run "npm run build" in the svelte folder if I want to update the svelte part of the project
-# platform is normally implicitly our current platform --> https://devblogs.microsoft.com/dotnet/improving-multiplatform-container-support/ --> to find supported platforms: docker manifest inspect mcr.microsoft.com/dotnet/sdk:7.0 | findstr architecture
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:7.0 AS build 
+
+
+# --platform=$BUILDPLATFORM makes it so that always our current architecture is used (not affected from buildx https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/) 
+# we want that because .net sdk cannot be emulated with QEMU https://devblogs.microsoft.com/dotnet/improving-multiplatform-container-support/
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+# this variable gets set if --platform is specified
 ARG TARGETARCH
 WORKDIR /source
 
 # copy csproj and restore as distinct layers --> restore = download dependencies
 COPY diary/*.csproj diary/
+# -a $TARGETARCH is used to get the correct architecture dependencies
 RUN dotnet restore "diary/csharp-diary-rewrite.csproj"  -a $TARGETARCH
 COPY diary/ diary/
 
 FROM build AS publish
 WORKDIR /source/diary
 # for some weird reason have to restore again, because otherewise "Package Microsoft.EntityFrameworkCore.Analyzers, version 7.0.10 was not found."
-RUN dotnet restore
-RUN dotnet publish --no-restore -o /diary
+RUN dotnet restore -a $TARGETARCH
+RUN dotnet publish -a $TARGETARCH --no-restore -o /diary
 
 # final stage/image
 # runtime for aspnetcore
