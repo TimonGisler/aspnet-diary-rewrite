@@ -1,3 +1,5 @@
+# start with: docker-compose -f docker-compose-dev-db.yml up
+
 # Use postgres/example user/password credentials
 version: '3.1'
 
