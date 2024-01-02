@@ -4,7 +4,8 @@
 
 #!!!!!!! This will create a docker image of my project, but it will not automatically copy the newest version of svelte
 #!!!!!!! I have to run "npm run build" in the svelte folder if I want to update the svelte part of the project
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+# platform is normally implicitly our current platform --> https://devblogs.microsoft.com/dotnet/improving-multiplatform-container-support/ --> to find supported platforms: docker manifest inspect mcr.microsoft.com/dotnet/sdk:7.0 | findstr architecture
+FROM --platform=linux/arm64 mcr.microsoft.com/dotnet/sdk:7.0 AS build 
 WORKDIR /source
 
 # copy csproj and restore as distinct layers --> restore = download dependencies
@@ -20,7 +21,7 @@ RUN dotnet publish --no-restore -o /diary
 
 # final stage/image
 # runtime for aspnetcore
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+FROM --platform=linux/arm64 mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /diary
 COPY --from=publish /diary .
 ENTRYPOINT ["dotnet", "csharp-diary-rewrite.dll"]
