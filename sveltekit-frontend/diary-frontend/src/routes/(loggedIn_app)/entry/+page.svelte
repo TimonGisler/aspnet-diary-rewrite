@@ -121,10 +121,8 @@
         await DeleteEntryHandlerService.deleteApiEntry(currentEntry.id);
         currentEntry = structuredClone(newEntry);
         fetchOverview();
+        switchToEditMode();
     }
-    
-    //TODO TGIS, add docker compose file to spin it up fast
-    //TODO TGIS; finished : D
 
 
 </script>

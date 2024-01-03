@@ -5,7 +5,8 @@ export default defineConfig({
 
 	server: {
         proxy: {
-            '/api': 'http://localhost:5281',
+            //'/api': 'http://localhost:5281',
+            '/api': 'https://timongisler.dev/',
         },
     },
 
