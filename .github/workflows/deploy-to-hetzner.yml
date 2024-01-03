@@ -13,13 +13,22 @@ on:
 jobs:
   build_and_deploy_to_hetzner: # the job id
     name: build and deploy to hetzner # the job name (displayed in ui)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Good to know, common tools like docker and npm are preinstalled in ubuntu-latest https://github.com/actions/runner-images#software-and-image-support
     
     # define steps to execute https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsteps
     steps:
     - 
       name: checkout newly pushed commit
       uses: actions/checkout@v4 # checkout my repo "By default, this action will check-out to the SHA for that workflow’s event (such as push and pull_request)." https://stackoverflow.com/a/76938699/15015069
+    -
+      name: generate static html files from sveltekit
+      run: |
+        cd sveltekit-frontend
+        cd diary-frontend
+        npm install
+        npm run buld-linux
+        cd ..
+        cd ..
     -
       name: build docker image
       run:  docker build --platform linux/arm64 -t ${{ vars.IMAGE_NAME }}:${{ github.sha }} -f csharp-diary-rewrite/Dockerfile csharp-diary-rewrite

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && xcopy .\\build\\* ..\\..\\csharp-diary-rewrite\\diary\\wwwroot /s /y",
+    "buld-linux": "vite build && mkdir -p ../../csharp-diary-rewrite/diary/wwwroot/ && cp -r \"./build\"/* ../../csharp-diary-rewrite/diary/wwwroot/",
     "preview": "vite preview",
     "test": "playwright test",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
