@@ -89,22 +89,24 @@
     }
 
     async function addEntry() {
-        let addResponse = AddEntryService.postApiEntry({
+        let addResponse = await AddEntryService.postApiEntry({
             title: currentEntry.title,
             text: currentEntry.text,
         });
 
-        addResponse.then(() => {
-            fetchOverview();
-            switchToReadMode();
-        });
+        currentEntry.id = addResponse.entryId;
+        fetchOverview();
+        switchToReadMode();
     }
 
     async function updateEntry() {
-        let updateResponse = UpdateEntryHandlerService.postApiEntry(currentEntry.id, {
-            newTitle: currentEntry.title,
-            newText: currentEntry.text,
-        });
+        let updateResponse = UpdateEntryHandlerService.postApiEntry(
+            currentEntry.id,
+            {
+                newTitle: currentEntry.title,
+                newText: currentEntry.text,
+            },
+        );
 
         updateResponse.then(() => {
             fetchOverview();
@@ -123,25 +125,31 @@
         fetchOverview();
         switchToEditMode();
     }
-
-
 </script>
 
-<div class="w-full h-full grid grid-cols-1 md:grid-cols-5 auto-cols-max overflow-hidden">
+<div
+    class="w-full h-full grid grid-cols-1 md:grid-cols-5 auto-cols-max overflow-hidden"
+>
     <!-- Entry overview -->
     <!-- both hidden and flex are set because on button click hidden gets removed, and it should then be flex, not block -->
     <div
         id={entryOverviewSidebarId}
         class="col-span-1 flex hidden md:flex flex-col p-4 pt-0 pb-0 mt-4 overflow-y-auto max-h-full mb-10"
-    >           
-     <button id="newEntryButton" class="btn btn-success sticky top-0 mb-3 z-10" on:click={newEntryClicked}>+ New Entry</button>
+    >
+        <button
+            id="newEntryButton"
+            class="btn btn-success sticky top-0 mb-3 z-10"
+            on:click={newEntryClicked}>+ New Entry</button
+        >
 
         <div id="entries" class="flex flex-col gap-3">
-
             {#each entryOverviewData as entry (entry.entryId)}
                 <button
                     id="singleEntryOverview"
-                    class="p-3 card bg-base-100 {entry.entryId === currentEntry.id ? 'bg-gray-700' : ''}"
+                    class="p-3 card bg-base-100 {entry.entryId ===
+                    currentEntry.id
+                        ? 'bg-gray-700'
+                        : ''}"
                     on:click={() => showEntry(entry.entryId)}
                     >{entry.title}</button
                 >
@@ -185,8 +193,8 @@
             >
 
             <button class="btn btn-error w-full" on:click={deleteEntry}
-            >Delete</button
-        >
+                >Delete</button
+            >
         {/if}
 
         <button class="btn btn-info w-full md:hidden" on:click={showOverview}>
